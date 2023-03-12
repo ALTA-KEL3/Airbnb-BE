@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Brain.Academy
+  title: GoHome
   description: This is API for Group Project By Alterra Academy
   version: "1.0.0"
   contact:
@@ -22,6 +22,7 @@ tags:
   - name: Reservation
   - name: Feedback
 
+# AUTH
 paths:
   /login:
     post:
@@ -54,7 +55,7 @@ paths:
                 $ref: "#/components/schemas/responseObject"
               example:
                 data:
-                  id: 6
+                  id: 1
                   name: "alfian aditya"
                   email: "alfian@example.com"
                   phone: "0812334455"
@@ -68,6 +69,160 @@ paths:
         500:
           $ref: "#/components/responses/500"
 
+# USER
+  /register:
+    post:
+      tags:
+        - "User"
+      summary: "Register new user"
+      description: "Endpoint for register new user"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                phone:
+                  type: string
+                address:
+                  type: string
+            example:
+              id: 1
+              name: "Alfian Aditya"
+              email: "alfian@example.com"
+              password: "alfian123"
+              phone: "0812334455"
+              address: "jln. Gelatik no 25 Bandung"
+      responses:
+        201:
+          description: "insert user data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+
+  /user:
+    get:
+      tags:
+        - "User"
+      summary: "show detail profile"
+      description: "endpoint for user see their own profile"
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "show detail user profile"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  id: 1
+                  name: "alfian aditya"
+                  email: "alfian@example.com"
+                  address: "jln. Gelatik no 25 Bandung"
+                  role: ""
+                  phone: "0812334455"
+                  photo_profile: ""
+                  homestay:
+                    - id: 1
+                      name: "villa premium 1"
+                      description: "villa di pegunungan yang sejuk"
+                      price: "500.000/night"
+                    - id: 2
+                      name: "villa premium 2"
+                      description: "villa di sawah yang sejuk"
+                      price: "500.000/night" 
+                    - id: 3
+                      name: "villa premium 3"
+                      description: "villa di pinggiran kota yang sejuk"
+                      price: "500.000/night" 
+                message: "success show profile"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+    put:
+      tags:
+        - "User"
+      summary: "update user profile"
+      description: "endpoint for user update their own profile"
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+            example:
+              name: "Alfian aditya"
+              email: "alfian@example.com"
+              address: "jln. Gelatik no 25 Bandung"
+              phone: "0812334455"
+              photo_profile: ""
+              role: "hoster"
+      responses:
+        200:
+          description: "update profile data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  id: 1
+                  name: "Alfian aditya"
+                  email: "alfian@example.com"
+                  address: "jln. Gelatik no 25 Bandung"
+                  phone: "0812334455"
+                  photo_profile: ""
+                  role: "hoster"
+                message: "success update profile data"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - "User"
+      summary: "deactive user account"
+      description: "endpoint for deactive user account"
+      security:
+        - JWTAuth: []
+      responses:
+        200:
+          description: "deactive user account"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                message: "success deactive user account"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+
+# HOMESTAY
   /homestays:
     post:
       tags:
@@ -92,7 +247,7 @@ paths:
               image2: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
               image3: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
       responses:
-        '201':
+        201:
           description: "Success Create Homestay"
           content:
             application/json:
@@ -101,11 +256,11 @@ paths:
               example:
                 status: "Success"
                 message: "Success Create New Homestay"
-        "400" :
+        400 :
           $ref : "#/components/responses/400"  
-        "404" :
+        404 :
           $ref : "#/components/responses/404"  
-        '500':
+        500:
           $ref: "#/components/responses/500"
     get:
       tags:
@@ -123,7 +278,7 @@ paths:
             type: string
             example: "Villa puncak"
       responses:
-        '200':
+        200:
           description: A list of Homestay
           content:
             application/json:
@@ -151,14 +306,14 @@ paths:
                       image1: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
                       image2: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
                       image3: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
-        "400" :
+        400 :
           $ref : "#/components/responses/400"  
-        "404" :
+        404 :
           $ref : "#/components/responses/404"  
-        '500':
+        500:
           $ref: "#/components/responses/500"
 
-  /homestays/{id_homestay}:
+  /homestays/{homestay_id}:
     get:
       tags:
         - Homestay
@@ -167,7 +322,7 @@ paths:
       security:
         - JWTAuth: []
       parameters:
-        - name: id
+        - name: homestay_id
           description: "Id homestay to get data"
           required: true
           in: path
@@ -176,7 +331,7 @@ paths:
             type: integer
             example: 1
       responses:
-        '200':
+        200:
           description: "Success Get Homestay by Id"
           content:
             application/json:
@@ -200,11 +355,11 @@ paths:
                         note: "oke"
                       - id: 2
                         note: "boleh deh"
-        "400" :
+        400 :
           $ref : "#/components/responses/400"  
-        "404" :
+        404 :
           $ref : "#/components/responses/404"  
-        '500':
+        500:
           $ref: "#/components/responses/500"
     put:
       tags:
@@ -214,7 +369,7 @@ paths:
       security:
         - JWTAuth: []
       parameters:
-        - name: id
+        - name: homestay_id
           description: "Id homestay to update data"
           required: true
           in: path
@@ -238,7 +393,7 @@ paths:
                 image2: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
                 image3: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
       responses:
-        '200':
+        200:
           description: "Success Update Homestay"
           content:
             application/json:
@@ -247,11 +402,11 @@ paths:
               example:
                   status: "Success"
                   message: "Success Update Homestay"
-        "400" :
+        400 :
           $ref : "#/components/responses/400"  
-        "404" :
+        404 :
           $ref : "#/components/responses/404"  
-        '500':
+        500:
           $ref: "#/components/responses/500"
 
     delete:
@@ -262,7 +417,7 @@ paths:
       security:
         - JWTAuth: []
       parameters:
-        - name: id
+        - name: homestay_id
           description: "Id homestay to delete data."
           required: true
           in: path
@@ -271,7 +426,7 @@ paths:
             type: integer
             example: 1
       responses:
-        '200':
+        200:
           description: "Success Delete Homestay"
           content:
             application/json:
@@ -280,13 +435,132 @@ paths:
               example:
                   status: "Success"
                   message: "Success Delete Homestay"
-        "400" :
+        400 :
           $ref : "#/components/responses/400"  
-        "404" :
+        404 :
           $ref : "#/components/responses/404"  
-        '500':
+        500:
           $ref: "#/components/responses/500"
 
+# RESERVATION
+  /reservation:
+    post:
+      tags:
+        - "Reservation"
+      summary: "add reservation"
+      description: "endpoint for user to make reservation"
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_date:
+                  type: string
+                end_date:
+                  type: string
+                price:
+                  type: number
+            example:
+              start_date: "2023-03-11"
+              end_date: "2023-03-12"
+              price: 500.000
+      responses:
+        201:
+          description: "add reservation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  id: 1
+                  start_date: "2023-03-11"
+                  end_date: "2023-03-12"
+                  price: 1.000.000
+                message: "success add reservation"
+        400:
+          $ref: "#/components/responses/400"
+        500:
+          $ref: "#/components/responses/500"
+
+  /reservation/{reservation_id}:
+    put:
+      tags:
+        - "Reservation"
+      summary: "edit reservation"
+      description: "endpoint for user to edit their reservation"
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: reservation_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              start_date: "2023-03-10"
+              end_date: "2023-03-12"
+              price: 1.500.000
+      responses:
+        200:
+          description: "update reservation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                data:
+                  id: 2
+                  start_date: "2023-03-10"
+                  end_date: "2023-03-12"
+                  price: 1.500.000
+                message: "success update reservation"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - "Reservation"
+      summary: "delete reservation"
+      description: "endpoint for delete user reservation by reservation id"
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: reservation_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "delete reservation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObject"
+              example:
+                message: "success delete reservation"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+
+# FEEDBACK
   /feedbacks:
     post:
       tags:
@@ -305,7 +579,7 @@ paths:
               id_homestay: 1
               note: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla interdum convallis tortor eget scelerisque. Sed diam risus, tincidunt at lacinia a, hendrerit at massa. Maecenas tincidunt convallis rhoncus. Maecenas augue tellus, interdum non nulla a, bibendum dapibus nulla. Nullam at lorem diam. Integer nec urna commodo, gravida est fringilla, ultricies velit. Suspendisse potenti."
       responses:
-        '201':
+        201:
           description: "Success create data"
           content:
             application/json:
@@ -314,11 +588,11 @@ paths:
               example:
                 status: "Success"
                 message: "Success add feedback"
-        "400" :
+        400 :
           $ref : "#/components/responses/400"  
-        "404" :
+        404 :
           $ref : "#/components/responses/404"  
-        '500':
+        500:
           $ref: "#/components/responses/500"
 
   /feedbacks/{id_feedback}: 
@@ -380,7 +654,7 @@ paths:
             type: integer
             example: 1
       responses:
-        '200':
+        200:
           description: "Success Delete Feedback"
           content:
             application/json:
@@ -389,11 +663,11 @@ paths:
               example:
                   status: "Success"
                   message: "Success Delete Feedback"
-        "400" :
+        400 :
           $ref : "#/components/responses/400"  
-        "404" :
+        404 :
           $ref : "#/components/responses/404"  
-        '500':
+        500:
           $ref: "#/components/responses/500"
 
 components:
@@ -498,9 +772,8 @@ components:
       scheme: bearer
       bearerFormat: JWT
       description: "user token"
-
   responses:
-    '200':
+    200:
       description: "Success Process Data"
       content:
         application/json:
@@ -511,7 +784,7 @@ components:
                 type: string
               data:
                 type: object
-    '201':
+    201:
       description: "Success Create Data"
       content:
         application/json:
@@ -522,7 +795,8 @@ components:
                 type: string
               data:
                 type: object
-    '400':
+  
+    400:
       description: "error from user"
       content:
         application/json:
@@ -533,7 +807,7 @@ components:
                 type: string
           example:
             message: "bad request"
-    '404':
+    404:
       description: "data not found"
       content:
         application/json:
@@ -544,7 +818,7 @@ components:
                 type: string
           example:
             message: "data not registered"
-    '500':
+    500:
       description: "error from server"
       content:
         application/json:

@@ -68,8 +68,413 @@ paths:
         500:
           $ref: "#/components/responses/500"
 
+  /homestays:
+    post:
+      tags:
+        - Homestay
+      summary: "Create Homestay" 
+      description: "Create New Homestay"
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsertHomestayObject"
+            example:
+              name: "Villa puncak"
+              homestay address: "jl. kenanga, Malang"
+              phone: 089777777
+              price: 300000
+              description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+              image1: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
+              image2: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
+              image3: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
+      responses:
+        '201':
+          description: "Success Create Homestay"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseWithoutData"
+              example:
+                status: "Success"
+                message: "Success Create New Homestay"
+        "400" :
+          $ref : "#/components/responses/400"  
+        "404" :
+          $ref : "#/components/responses/404"  
+        '500':
+          $ref: "#/components/responses/500"
+    get:
+      tags:
+        - Homestay
+      summary: "Get All Homestay And Search"
+      description: "Get all homestay and can use query parameter to search. Input using lowercase"
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: name
+          description: "Homestay Name"
+          required: false
+          in: query
+          schema:
+            type: string
+            example: "Villa puncak"
+      responses:
+        '200':
+          description: A list of Homestay
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseWithData"
+              example:
+                  status: "Success"
+                  message: "Success get all homestay"
+                  data:
+                    - id: 1
+                      name: "Villa puncak"
+                      homestay address: "jl. kenanga, Malang"
+                      phone: 089777777
+                      price: 300000
+                      description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+                      image1: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
+                      image2: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
+                      image3: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
+                    - id: 2
+                      name: "Villa puncak"
+                      homestay address: "jl. kenanga, Malang"
+                      phone: 089777777
+                      price: 300000
+                      description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+                      image1: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
+                      image2: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
+                      image3: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
+        "400" :
+          $ref : "#/components/responses/400"  
+        "404" :
+          $ref : "#/components/responses/404"  
+        '500':
+          $ref: "#/components/responses/500"
+
+  /homestays/{id_homestay}:
+    get:
+      tags:
+        - Homestay
+      summary: "Get Homestays by Id"
+      description: "Get Homestay using id class at path parameter. Only return 1 data."
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id
+          description: "Id homestay to get data"
+          required: true
+          in: path
+          schema:
+            description: "Id homestay 1"
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: "Success Get Homestay by Id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseWithData"
+              example:
+                  status: "Success"
+                  message: "Success Get Homestay by Id"
+                  data:
+                    id: 1
+                    name: "Villa puncak"
+                    homestay address: "jl. kenanga, Malang"
+                    phone: 089777777
+                    price: 300000
+                    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+                    image1: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
+                    image2: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
+                    image3: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
+                    feedback:
+                      - id: 1
+                        note: "oke"
+                      - id: 2
+                        note: "boleh deh"
+        "400" :
+          $ref : "#/components/responses/400"  
+        "404" :
+          $ref : "#/components/responses/404"  
+        '500':
+          $ref: "#/components/responses/500"
+    put:
+      tags:
+        - Homestay
+      summary: "Update Homestays"
+      description: "Update Homestay using request body and using id for reference at path parameter."
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id
+          description: "Id homestay to update data"
+          required: true
+          in: path
+          schema:
+            description: "Id homestay 1"
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+                $ref: "#/components/schemas/EditHomestayObject"
+            example:
+                name: "Villa puncak"
+                homestay address: "jl. kenanga, Malang"
+                phone: 089777777
+                price: 300000
+                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+                image1: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
+                image2: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
+                image3: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
+      responses:
+        '200':
+          description: "Success Update Homestay"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseWithoutData" 
+              example:
+                  status: "Success"
+                  message: "Success Update Homestay"
+        "400" :
+          $ref : "#/components/responses/400"  
+        "404" :
+          $ref : "#/components/responses/404"  
+        '500':
+          $ref: "#/components/responses/500"
+
+    delete:
+      tags:
+        - Homestay
+      summary: "Delete Homestays"
+      description: "Delete homestay using id at path parameter as reference."
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id
+          description: "Id homestay to delete data."
+          required: true
+          in: path
+          schema:
+            description: "Id homestay 1."
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: "Success Delete Homestay"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseWithoutData" 
+              example:
+                  status: "Success"
+                  message: "Success Delete Homestay"
+        "400" :
+          $ref : "#/components/responses/400"  
+        "404" :
+          $ref : "#/components/responses/404"  
+        '500':
+          $ref: "#/components/responses/500"
+
+  /feedbacks:
+    post:
+      tags:
+        - Feedback
+      summary: "Create Feedback" 
+      description: "Create New Feedback for homestay"
+      security:
+        - JWTAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InsertFeedbackObject"
+            example:
+              id_homestay: 1
+              note: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla interdum convallis tortor eget scelerisque. Sed diam risus, tincidunt at lacinia a, hendrerit at massa. Maecenas tincidunt convallis rhoncus. Maecenas augue tellus, interdum non nulla a, bibendum dapibus nulla. Nullam at lorem diam. Integer nec urna commodo, gravida est fringilla, ultricies velit. Suspendisse potenti."
+      responses:
+        '201':
+          description: "Success create data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseWithoutData"
+              example:
+                status: "Success"
+                message: "Success add feedback"
+        "400" :
+          $ref : "#/components/responses/400"  
+        "404" :
+          $ref : "#/components/responses/404"  
+        '500':
+          $ref: "#/components/responses/500"
+
+  /feedbacks/{id_feedback}: 
+    put:
+      tags:
+        - Feedback
+      summary: "edit feedback by id"
+      description: "edit data feedback"
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id_feedback
+          description: "id feedback"
+          required: true
+          in: path
+          schema: 
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                  id_homestay: 1
+                  notes: "fasilitas bagus dan nyaman"
+
+      responses:
+        '200':
+          description: "Success Update Feedback"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseWithoutData" 
+              example:
+                  status: "Success"
+                  message: "Success Update Feedback"
+        "400" :
+          $ref : "#/components/responses/400"  
+        "404" :
+          $ref : "#/components/responses/404"  
+        '500':
+          $ref: "#/components/responses/500"
+
+    delete:
+      tags:
+        - Feedback
+      summary: "delete feedback"
+      description: "delete spesific feedback"
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: id_feedback
+          description: "id feedback"
+          required: true
+          in: path
+          schema: 
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: "Success Delete Feedback"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseWithoutData" 
+              example:
+                  status: "Success"
+                  message: "Success Delete Feedback"
+        "400" :
+          $ref : "#/components/responses/400"  
+        "404" :
+          $ref : "#/components/responses/404"  
+        '500':
+          $ref: "#/components/responses/500"
+
 components:
   schemas:
+
+### Homestay Schemas
+    "InsertHomestayObject":
+      type: object
+      properties:
+        "name":
+          type: string
+        "address":
+          type: string
+        "phone":
+          type: integer
+        "price": 
+          type: integer
+        "image1":
+          type: string
+          format: binary
+        "image2":
+          type: string
+          format: binary
+        "image3":
+          type: string
+          format: binary
+        "description":
+          type: string    
+    "EditHomestayObject":
+      type: object
+      properties:
+        "name":
+          type: string
+        "address":
+          type: string
+        "phone":
+          type: integer
+        "price": 
+          type: integer
+        "image1":
+          type: string
+          format: binary
+        "image2":
+          type: string
+          format: binary
+        "image3":
+          type: string
+          format: binary
+        "description":
+          type: string 
+
+### Feedbacks Schemas
+    "InsertFeedbackObject":
+      type: object
+      properties:
+        "id homestay":
+          type: integer
+        "rating":
+          type: string
+        "feedback":
+          type: string
+        "id_homestay":
+          type: string        
+
+    "ResponseWithoutData":
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+    "ResponseWithData":
+      type: object
+      properties:
+        status:
+          type: string
+        message: 
+          type: string
+        data:
+          type: object
+
     responseObject:
       type: object
       properties:
@@ -93,8 +498,31 @@ components:
       scheme: bearer
       bearerFormat: JWT
       description: "user token"
+
   responses:
-    400:
+    '200':
+      description: "Success Process Data"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+              data:
+                type: object
+    '201':
+      description: "Success Create Data"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+              data:
+                type: object
+    '400':
       description: "error from user"
       content:
         application/json:
@@ -105,7 +533,7 @@ components:
                 type: string
           example:
             message: "bad request"
-    404:
+    '404':
       description: "data not found"
       content:
         application/json:
@@ -116,7 +544,7 @@ components:
                 type: string
           example:
             message: "data not registered"
-    500:
+    '500':
       description: "error from server"
       content:
         application/json:

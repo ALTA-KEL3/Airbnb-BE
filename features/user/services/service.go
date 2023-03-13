@@ -57,8 +57,14 @@ func (us *userService) Login(email string, password string) (string, user.Core, 
 }
 
 // Profile implements user.UserService
-func (*userService) Profile(token interface{}) (user.Core, error) {
-	panic("unimplemented")
+func (us *userService) Profile(token interface{}) (user.Core, error) {
+	userID := helper.ExtractToken(token)
+	res, err := us.qry.Profile(uint(userID))
+	if err != nil {
+		log.Println("data not found")
+		return user.Core{}, errors.New("query error, problem with server")
+	}
+	return res, nil
 }
 
 // Register implements user.UserService

@@ -14,7 +14,7 @@ type Reservation struct {
 	gorm.Model
 	Checkin    time.Time
 	Checkout   time.Time
-	TotalPrice int
+	TotalPrice float64
 	HomestayID uint
 	Homestay   h.Homestay
 	UserID     uint

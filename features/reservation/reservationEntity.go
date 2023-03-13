@@ -10,7 +10,7 @@ type ReservationCore struct {
 	ID uint
 	Checkin    time.Time
 	Checkout   time.Time
-	TotalPrice int
+	TotalPrice float64
 	HomestayID uint
 	// Homestay   homestay.Core
 	UserID     uint

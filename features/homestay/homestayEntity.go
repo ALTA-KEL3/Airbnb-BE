@@ -28,7 +28,7 @@ type HomestayHandler interface {
 }
 
 type HomestayService interface {
-	Add(userRole, token interface{}, fileData multipart.FileHeader, newHomestay Core) (Core, error)
+	Add(token interface{}, fileData multipart.FileHeader, newHomestay Core) (Core, error)
 	ShowAll() ([]Core, error)
 	ShowDetail(homestayID uint) (Core, error)
 	Update(token interface{}, homestayID uint, fileData multipart.FileHeader, updateData Core) (Core, error)
@@ -36,7 +36,7 @@ type HomestayService interface {
 }
 
 type HomestayData interface {
-	Add(userRole, userID uint, newHomestay Core) (Core, error)
+	Add(userRole string, userID uint, newHomestay Core) (Core, error)
 	ShowAll() ([]Core, error)
 	ShowDetail(homestayID uint) (Core, error)
 	Update(userID uint, homestayID uint, updateHomestay Core) (Core, error)

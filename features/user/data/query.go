@@ -28,14 +28,14 @@ func (q *userQuery) Register(newUser user.Core) (user.Core, error) {
 
 	newUser.ProfilePicture = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
 
-	cnv := UserCoreToUser(newUser)
-	err = q.db.Create(&cnv).Error
+	users := UserCoreToUser(newUser)
+	err = q.db.Create(&users).Error
 	if err != nil {
 		log.Println("query error", err.Error())
 		return user.Core{}, errors.New("server error")
 	}
 
-	newUser.ID = cnv.ID
+	newUser.ID = users.ID
 	return newUser, nil
 }
 
@@ -73,8 +73,8 @@ func (q *userQuery) Update(updateData user.Core, userID uint) (user.Core, error)
 		}
 	}
 
-	cnv := UserCoreToUser(updateData)
-	qry := q.db.Model(&User{}).Where("id = ?", userID).Updates(&cnv)
+	users := UserCoreToUser(updateData)
+	qry := q.db.Model(&User{}).Where("id = ?", userID).Updates(&users)
 	affrows := qry.RowsAffected
 	if affrows == 0 {
 		log.Println("no rows affected")
@@ -85,7 +85,7 @@ func (q *userQuery) Update(updateData user.Core, userID uint) (user.Core, error)
 		log.Println("update user query error", err.Error())
 		return user.Core{}, errors.New("user not found")
 	}
-	result := UserToUserCore(cnv)
+	result := UserToUserCore(users)
 	result.ID = userID
 	return result, nil
 }

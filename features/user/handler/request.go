@@ -1,14 +1,18 @@
 package handler
 
-import "airbnb/features/user"
+import (
+	"airbnb/features/user"
+	"mime/multipart"
+)
 
 type RegisterRequest struct {
-	Name     string `json:"name" form:"name"`
-	Email    string `json:"email" form:"email"`
-	Password string `json:"password" form:"password"`
-	Phone    string `json:"phone" form:"phone"`
-	Address  string `json:"address" form:"address"`
-	Role     string `json:"role" form:"role"`
+	Name       string `json:"name" form:"name"`
+	Email      string `json:"email" form:"email"`
+	Password   string `json:"password" form:"password"`
+	Phone      string `json:"phone" form:"phone"`
+	Address    string `json:"address" form:"address"`
+	Role       string `json:"role" form:"role"`
+	FileHeader multipart.FileHeader
 }
 
 type LoginRequest struct {

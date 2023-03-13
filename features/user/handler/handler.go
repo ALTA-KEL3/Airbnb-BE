@@ -20,8 +20,18 @@ func New(srv user.UserService) user.UserHandler {
 }
 
 // Delete implements user.UserHandler
-func (*userHandler) Delete() echo.HandlerFunc {
-	panic("unimplemented")
+func (uh *userHandler) Delete() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		err := uh.srv.Delete(c.Get("user"))
+		if err != nil {
+			return c.JSON(http.StatusNotFound, map[string]interface{}{
+				"message": "data not found",
+			})
+		}
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "success deactivate user account",
+		})
+	}
 }
 
 // Login implements user.UserHandler
@@ -50,7 +60,7 @@ func (uh *userHandler) Login() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"data":    ToResponse(res),
 			"token":   token,
-			"message": "success login",
+			"message": "login succes",
 		})
 	}
 }
@@ -97,6 +107,55 @@ func (uh *userHandler) Register() echo.HandlerFunc {
 }
 
 // Update implements user.UserHandler
-func (*userHandler) Update() echo.HandlerFunc {
-	panic("unimplemented")
+func (uh *userHandler) Update() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		input := RegisterRequest{}
+		err := c.Bind(&input)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, "input format incorrect")
+		}
+		//proses cek apakah user input foto ?
+		checkFile, _, _ := c.Request().FormFile("profile_picture")
+		if checkFile != nil {
+			formHeader, err := c.FormFile("profile_picture")
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "Select a file to upload"})
+			}
+			input.FileHeader = *formHeader
+		}
+		// log.Println((input.FileHeader))
+		res, err := uh.srv.Update(c.Get("user"), input.FileHeader, *ReqToCore(input))
+		if err != nil {
+			if strings.Contains(err.Error(), "email") {
+				return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "email already used"})
+			} else if strings.Contains(err.Error(), "is not min") {
+				return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "validate: password length minimum 3 character"})
+			} else if strings.Contains(err.Error(), "type") {
+				return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": err.Error()})
+			} else if strings.Contains(err.Error(), "access denied") {
+				return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "access denied"})
+			} else if strings.Contains(err.Error(), "size") {
+				return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "file size max 500kb"})
+			} else if strings.Contains(err.Error(), "validate") {
+				return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": err.Error()})
+			} else if strings.Contains(err.Error(), "not registered") {
+				return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": err.Error()})
+			} else {
+				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "unable to process data"})
+			}
+		}
+
+		result, err := ConvertUpdateResponse(res)
+		if err != nil {
+			return c.JSON(http.StatusOK, map[string]interface{}{
+				"message": err.Error(),
+			})
+		} else {
+			// log.Println(res)
+			return c.JSON(http.StatusOK, map[string]interface{}{
+				"data":    result,
+				"message": "success update profile data",
+			})
+		}
+	}
 }

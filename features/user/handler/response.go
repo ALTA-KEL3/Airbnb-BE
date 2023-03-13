@@ -11,6 +11,7 @@ type UserResponse struct {
 	Email   string `json:"email"`
 	Phone   string `json:"phone"`
 	Address string `json:"address"`
+	Role    string `json:"role"`
 }
 
 func ToResponse(data user.Core) UserResponse {
@@ -20,6 +21,7 @@ func ToResponse(data user.Core) UserResponse {
 		Email:   data.Email,
 		Phone:   data.Phone,
 		Address: data.Address,
+		Role:    data.Role,
 	}
 }
 
@@ -61,7 +63,7 @@ func ConvertUpdateResponse(input user.Core) (interface{}, error) {
 	if ResponseFilter.Address != "" {
 		result["address"] = ResponseFilter.Address
 	}
-	if ResponseFilter.Phone != "" {
+	if ResponseFilter.Role != "" {
 		result["role"] = ResponseFilter.Role
 	}
 	if ResponseFilter.Phone != "" {

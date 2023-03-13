@@ -87,6 +87,29 @@ func (us *userService) Register(newUser user.Core) (user.Core, error) {
 }
 
 // Update implements user.UserService
-func (*userService) Update(token interface{}, fileData multipart.FileHeader, updateData user.Core) (user.Core, error) {
-	panic("unimplemented")
+func (us *userService) Update(token interface{}, fileData multipart.FileHeader, updateData user.Core) (user.Core, error) {
+	userID := helper.ExtractToken(token)
+
+	hashed := helper.GeneratePassword(updateData.Password)
+	updateData.Password = string(hashed)
+	log.Println("size:", fileData.Size)
+
+	url, err := helper.GetUrlImagesFromAWS(fileData)
+	if err != nil {
+		return user.Core{}, errors.New("validate: " + err.Error())
+	}
+	updateData.ProfilePicture = url
+	res, err := us.qry.Update(uint(userID), updateData)
+	if err != nil {
+		msg := ""
+		if strings.Contains(err.Error(), "not found") {
+			msg = "account not registered"
+		} else if strings.Contains(err.Error(), "email") {
+			msg = "email duplicated"
+		} else if strings.Contains(err.Error(), "access denied") {
+			msg = "access denied"
+		}
+		return user.Core{}, errors.New(msg)
+	}
+	return res, nil
 }

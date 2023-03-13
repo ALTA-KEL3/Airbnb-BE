@@ -7,13 +7,14 @@ import (
 )
 
 type Core struct {
-	ID       uint
-	Name     string
-	Email    string `validate:"required,email,unique"`
-	Password string `validate:"required"`
-	Role     string `validate:"required"`
-	Phone    string
-	Address  string
+	ID             uint
+	Name           string
+	Email          string `validate:"required,email,unique"`
+	Password       string `validate:"required"`
+	Role           string `validate:"required"`
+	ProfilePicture string
+	Phone          string
+	Address        string
 	// Homestay []Homestay
 }
 

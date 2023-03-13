@@ -63,7 +63,7 @@ func (q *userQuery) Profile(userID uint) (user.Core, error) {
 	return UserToUserCore(res), nil
 }
 
-func (q *userQuery) Update(updateData user.Core, userID uint) (user.Core, error) {
+func (q *userQuery) Update(userID uint, updateData user.Core) (user.Core, error) {
 	if updateData.Email != "" {
 		dupEmail := User{}
 		err := q.db.Where("email = ?", updateData.Email).First(&dupEmail).Error

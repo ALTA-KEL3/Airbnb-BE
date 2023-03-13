@@ -36,8 +36,27 @@ func (hq *homestayQuery) Add(userRole string, userID uint, newHomestay homestay.
 }
 
 // Delete implements homestay.HomestayData
-func (*homestayQuery) Delete(userID uint, homestayID uint) error {
-	panic("unimplemented")
+func (hq *homestayQuery) Delete(userID uint, homestayID uint) error {
+	getID := Homestay{}
+	err := hq.db.Where("id = ?", homestayID).First(&getID).Error
+	if err != nil {
+		log.Println("get homestay error : ", err.Error())
+		return errors.New("failed to get homestay data")
+	}
+
+	if getID.ID != homestayID {
+		log.Println("unauthorized request")
+		return errors.New("unauthorized request")
+	}
+	qryDelete := hq.db.Delete(&Homestay{}, homestayID)
+	affRow := qryDelete.RowsAffected
+
+	if affRow <= 0 {
+		log.Println("No rows affected")
+		return errors.New("failed to delete homestay content, data not found")
+	}
+
+	return nil
 }
 
 // ShowAll implements homestay.HomestayData

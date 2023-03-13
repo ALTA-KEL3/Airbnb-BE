@@ -42,7 +42,9 @@ func (hs *homestayService) Add(token interface{}, fileData multipart.FileHeader,
 	newHomestay.Image2 = url
 	newHomestay.Image3 = url
 
-	res, err := hs.Data.Add(newHomestay, uint(userID), newHomestay)
+	userRole := "hoster"
+
+	res, err := hs.Data.Add(userRole, uint(userID), newHomestay)
 
 	if err != nil {
 		log.Println("cannot post book", err.Error())

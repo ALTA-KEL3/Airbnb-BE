@@ -2,6 +2,7 @@ package services
 
 import (
 	"airbnb/features/homestay"
+	"airbnb/features/user"
 	"airbnb/helper"
 	"errors"
 	"log"
@@ -23,10 +24,10 @@ func New(data homestay.HomestayData) homestay.HomestayService {
 }
 
 func (hs *homestayService) Add(token interface{}, fileData multipart.FileHeader, newHomestay homestay.Core) (homestay.Core, error) {
-
-	// if userRole.Role != "hoster"{
-	// 	return homestay.Core{}, errors.New("role option only: hoster")
-	//
+	var users user.Core
+	if users.Role != "hoster"{
+		return homestay.Core{}, errors.New("role option only: hoster")
+	}
 
 	userID := helper.ExtractToken(token)
 
@@ -42,9 +43,9 @@ func (hs *homestayService) Add(token interface{}, fileData multipart.FileHeader,
 	newHomestay.Image2 = url
 	newHomestay.Image3 = url
 
-	userRole := "hoster"
+	// userRole := "hoster"
 
-	res, err := hs.Data.Add(userRole, uint(userID), newHomestay)
+	res, err := hs.Data.Add(users.Role, uint(userID), newHomestay)
 
 	if err != nil {
 		log.Println("cannot post book", err.Error())

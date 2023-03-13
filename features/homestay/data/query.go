@@ -60,16 +60,40 @@ func (hq *homestayQuery) Delete(userID uint, homestayID uint) error {
 }
 
 // ShowAll implements homestay.HomestayData
-func (*homestayQuery) ShowAll() ([]homestay.Core, error) {
+func (hq *homestayQuery) ShowAll() ([]homestay.Core, error) {
 	panic("unimplemented")
 }
 
 // ShowDetail implements homestay.HomestayData
-func (*homestayQuery) ShowDetail(homestayID uint) (homestay.Core, error) {
-	panic("unimplemented")
+func (hq *homestayQuery) ShowDetail(homestayID uint) (homestay.Core, error) {
+	res := Homestay{}
+
+	err := hq.db.Where("id = ?", homestayID).First(&res).Error
+	if err != nil {
+		log.Println("data not found", err.Error())
+		return homestay.Core{}, errors.New("data not found")
+	}
+
+	result := ModelToCore(res)
+
+	return result, nil
 }
 
 // Update implements homestay.HomestayData
-func (*homestayQuery) Update(userID uint, homestayID uint, updateHomestay homestay.Core) (homestay.Core, error) {
-	panic("unimplemented")
+func (hq *homestayQuery) Update(userID uint, homestayID uint, updateHomestay homestay.Core) (homestay.Core, error) {
+	cnv := CoreToModel(updateHomestay)
+	cnv.ID = uint(homestayID)
+
+	qry := hq.db.Where("id = ?", homestayID).Updates(&cnv)
+	affrows := qry.RowsAffected
+	if affrows == 0 {
+		log.Println("no rows affected")
+		return homestay.Core{}, errors.New("no data updated")
+	}
+	err := qry.Error
+	if err != nil {
+		log.Println("update homestay query error", err.Error())
+		return homestay.Core{}, errors.New("user not found")
+	}
+	return updateHomestay, nil
 }

@@ -1,11 +1,16 @@
 package services
 
 import (
+	"airbnb/app/config"
 	"airbnb/features/user"
 	"airbnb/helper"
 	"errors"
+	"log"
 	"mime/multipart"
 	"strings"
+	"time"
+
+	"github.com/golang-jwt/jwt"
 )
 
 type userService struct {
@@ -24,8 +29,31 @@ func (*userService) Delete(token interface{}) error {
 }
 
 // Login implements user.UserService
-func (*userService) Login(email string, password string) (string, user.Core, error) {
-	panic("unimplemented")
+func (us *userService) Login(email string, password string) (string, user.Core, error) {
+	res, err := us.qry.Login(email)
+	if err != nil {
+		msg := ""
+		if strings.Contains(err.Error(), "not found") {
+			msg = "data not found"
+		} else {
+			msg = "there is a problem with the server"
+		}
+		return "", user.Core{}, errors.New(msg)
+	}
+
+	if err := helper.ComparePassword(res.Password, password); err != nil {
+		log.Println("login compare", err.Error())
+		return "", user.Core{}, errors.New("password not matched")
+	}
+
+	claims := jwt.MapClaims{}
+	claims["authorized"] = true
+	claims["userID"] = res.ID
+	claims["exp"] = time.Now().Add(time.Hour * 48).Unix()
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	useToken, _ := token.SignedString([]byte(config.JWTKey))
+
+	return useToken, res, nil
 }
 
 // Profile implements user.UserService

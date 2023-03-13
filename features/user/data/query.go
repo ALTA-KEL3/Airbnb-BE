@@ -39,13 +39,13 @@ func (q *userQuery) Register(newUser user.Core) (user.Core, error) {
 	return newUser, nil
 }
 
-func (q *userQuery) Login(username string) (user.Core, error) {
-	if username == "" {
+func (q *userQuery) Login(email string) (user.Core, error) {
+	if email == "" {
 		log.Println("data empty, query error")
-		return user.Core{}, errors.New("username not allowed empty")
+		return user.Core{}, errors.New("email not allowed empty")
 	}
 	res := User{}
-	if err := q.db.Where("username = ?", username).First(&res).Error; err != nil {
+	if err := q.db.Where("email = ?", email).First(&res).Error; err != nil {
 		log.Println("login query error", err.Error())
 		return user.Core{}, errors.New("data not found")
 	}

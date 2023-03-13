@@ -3,7 +3,7 @@ package main
 import (
 	config "airbnb/app/config"
 	database "airbnb/app/database"
-	router "airbnb/app/router"
+	router "airbnb/app/route"
 	"log"
 
 	"github.com/labstack/echo/v4"

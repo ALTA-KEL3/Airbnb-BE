@@ -2,7 +2,10 @@ package handler
 
 import (
 	"airbnb/features/homestay"
+	"airbnb/helper"
+	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -63,12 +66,33 @@ func (hh *homestayHandler) Add() echo.HandlerFunc {
 }
 
 // Delete implements homestay.HomestayHandler
-func (*homestayHandler) Delete() echo.HandlerFunc {
-	panic("unimplemented")
+func (hh *homestayHandler) Delete() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		token := c.Get("user")
+
+		paramID := c.Param("id")
+
+		bookID, err := strconv.Atoi(paramID)
+
+		if err != nil {
+			log.Println("convert id error", err.Error())
+			return c.JSON(http.StatusBadGateway, "Invalid input")
+		}
+
+		err = hh.srv.Delete(token, uint(bookID))
+
+		if err != nil {
+			return c.JSON(helper.PrintErrorResponse(err.Error()))
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "success delete homestay",
+		})
+	}
 }
 
 // ShowAll implements homestay.HomestayHandler
-func (*homestayHandler) ShowAll() echo.HandlerFunc {
+func (hh *homestayHandler) ShowAll() echo.HandlerFunc {
 	panic("unimplemented")
 }
 

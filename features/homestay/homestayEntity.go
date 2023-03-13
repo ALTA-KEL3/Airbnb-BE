@@ -11,7 +11,7 @@ type Core struct {
 	Name     string `validate:"required"`
 	Address  string `validate:"required"`
 	Phone    string `validate:"required"`
-	Price    string
+	Price    float64
 	Facility string
 	Image1   string
 	Image2   string

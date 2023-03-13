@@ -12,7 +12,7 @@ type Homestay struct {
 	Name     string
 	Address  string
 	Phone    string `gorm:"unique"`
-	Price    string
+	Price    float64
 	Facility string
 	Image1   string
 	Image2   string

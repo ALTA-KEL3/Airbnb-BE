@@ -5,7 +5,8 @@ import (
 	"log"
 
 	"airbnb/app/config"
-	// userData "airbnb/features/user/data"
+	userData "airbnb/features/user/data"
+
 	// homestayData "airbnb/features/homestay/data"
 	// reservationData "airbnb/features/reservation/data"
 	// feedbackData "airbnb/features/feedback/data"
@@ -27,7 +28,7 @@ func InitDB(cfg config.DBConfig) *gorm.DB {
 }
 
 func Migrate(db *gorm.DB) {
-	// db.AutoMigrate(userData.User{})
+	db.AutoMigrate(userData.User{})
 	// db.AutoMigrate(classData.Class{})
 	// db.AutoMigrate(menteeData.Mentee{})
 }

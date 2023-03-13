@@ -24,8 +24,14 @@ func New(ud user.UserData) user.UserService {
 }
 
 // Delete implements user.UserService
-func (*userService) Delete(token interface{}) error {
-	panic("unimplemented")
+func (us *userService) Delete(token interface{}) error {
+	id := helper.ExtractToken(token)
+	err := us.qry.Delete(uint(id))
+	if err != nil {
+		log.Println("query error", err.Error())
+		return errors.New("query error, delete account fail")
+	}
+	return nil
 }
 
 // Login implements user.UserService

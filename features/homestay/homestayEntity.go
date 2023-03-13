@@ -36,7 +36,7 @@ type HomestayService interface {
 }
 
 type HomestayData interface {
-	Add(userRole string, userID uint, newHomestay Core) (Core, error)
+	Add(userRole, userID uint, newHomestay Core) (Core, error)
 	ShowAll() ([]Core, error)
 	ShowDetail(homestayID uint) (Core, error)
 	Update(userID uint, homestayID uint, updateHomestay Core) (Core, error)

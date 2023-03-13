@@ -16,6 +16,7 @@ type Core struct {
 	Image1   string
 	Image2   string
 	Image3   string
+	UserID   uint
 }
 
 type HomestayHandler interface {

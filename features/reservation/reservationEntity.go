@@ -18,9 +18,9 @@ type ReservationCore struct {
 }
 
 type ReservationServiceInterface interface {
-	CreateReservation(input ReservationCore) error
+	CreateReservation(input ReservationCore) (ReservationCore, error)
 }
 
 type ReservationDataInterface interface {
-	CreateReservation(input ReservationCore) error
+	CreateReservation(input ReservationCore) (ReservationCore, error)
 }

@@ -18,21 +18,21 @@ func NewReservation(db *gorm.DB) reservation.ReservationDataInterface {
 	}
 }
 
-func (d *reservationQuery) CreateReservation(input reservation.ReservationCore) error {
+func (d *reservationQuery) CreateReservation(input reservation.ReservationCore) ( reservation.ReservationCore, error) {
 	model := data.Homestay{}
 	tx := d.db.First(&model, input.HomestayID)
 	if tx.Error != nil {
-		return tx.Error
+		return reservation.ReservationCore{}, tx.Error
 	}
 	// input.Price = model.Price
 	input.TotalPrice = r.Checkin(input.Checkin, input.Checkout) * float64(model.Price)
 
-	reservation := CoretoModel(input) //dari gorm model ke user core
+	res := CoretoModel(input) //dari gorm model ke user core
 
-	tx1 := d.db.Create(&reservation) // proses insert data
+	err := d.db.Create(&res).Error // proses insert data
 
-	if tx1.Error != nil {
-		return tx.Error
+	if err != nil {
+		return reservation.ReservationCore{}, tx.Error
 	}
-	return nil
+	return input, nil
 }

@@ -2,6 +2,7 @@ package service
 
 import (
 	"airbnb/features/reservation"
+	"airbnb/helper"
 	"errors"
 	"time"
 	// "github.com/go-playground/validator/v10"
@@ -20,13 +21,18 @@ func NewReservation(data reservation.ReservationDataInterface) reservation.Reser
 
 }
 
-func (service *ReservationService) CreateReservation(input reservation.ReservationCore) error {
-	err := service.Data.CreateReservation(input)
+func (service *ReservationService) CreateReservation(input reservation.ReservationCore) (reservation.ReservationCore, error) {
+	var token interface{}
+	userID := helper.ExtractToken(token)
 
-	if err != nil {
-		return errors.New("failed to add reservation")
+	if userID <= 0 {
+		return reservation.ReservationCore{}, errors.New("user not found")
 	}
-	return nil
+	res, err := service.Data.CreateReservation(input)
+	if err != nil {
+		return reservation.ReservationCore{}, errors.New("failed to add reservation")
+	}
+	return res, nil
 }
 func Checkin(start, end time.Time) float64 {
 	difference := start.Sub(end)

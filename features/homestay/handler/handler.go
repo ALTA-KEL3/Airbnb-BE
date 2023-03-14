@@ -32,16 +32,34 @@ func (hh *homestayHandler) Add() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, "input format incorrect")
 		}
 		//proses cek apakah user input foto ?
-		checkFile, _, _ := c.Request().FormFile("image")
-		if checkFile != nil {
-			formHeader, err := c.FormFile("image")
+		checkFile1, _, _ := c.Request().FormFile("image1")
+		if checkFile1 != nil {
+			formHeader1, err := c.FormFile("image1")
 			if err != nil {
 				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "Select a file to upload"})
 			}
-			input.FileHeader = *formHeader
+			input.FileHeader1 = *formHeader1
 		}
 
-		res, err := hh.srv.Add(token, input.FileHeader, *ReqToCore(input))
+		checkFile2, _, _ := c.Request().FormFile("image2")
+		if checkFile2 != nil {
+			formHeader2, err := c.FormFile("image2")
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "Select a file to upload"})
+			}
+			input.FileHeader2 = *formHeader2
+		}
+
+		checkFile3, _, _ := c.Request().FormFile("image3")
+		if checkFile3 != nil {
+			formHeader3, err := c.FormFile("image3")
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "Select a file to upload"})
+			}
+			input.FileHeader3 = *formHeader3
+		}
+
+		res, err := hh.srv.Add(token, input.FileHeader1, input.FileHeader2, input.FileHeader3, *ReqToCore(input))
 
 		if err != nil {
 			if strings.Contains(err.Error(), "type") {
@@ -154,16 +172,28 @@ func (hh *homestayHandler) Update() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, "input format incorrect")
 		}
 		//proses cek apakah user input foto ?
-		checkFile, _, _ := c.Request().FormFile("image")
+		checkFile, _, _ := c.Request().FormFile("image1")
 		if checkFile != nil {
-			formHeader, err := c.FormFile("image")
+			formHeader1, err := c.FormFile("image1")
 			if err != nil {
 				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "Select a file to upload"})
 			}
-			input.FileHeader = *formHeader
+			input.FileHeader1 = *formHeader1
+
+			formHeader2, err := c.FormFile("image2")
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "Select a file to upload"})
+			}
+			input.FileHeader2 = *formHeader2
+
+			formHeader3, err := c.FormFile("image3")
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "Select a file to upload"})
+			}
+			input.FileHeader3 = *formHeader3
 		}
 
-		res, err := hh.srv.Update(token, uint(homestayID), input.FileHeader, *ReqToCore(input))
+		res, err := hh.srv.Update(token, uint(homestayID), input.FileHeader1, input.FileHeader2, input.FileHeader3, *ReqToCore(input))
 
 		if err != nil {
 			if strings.Contains(err.Error(), "type") {

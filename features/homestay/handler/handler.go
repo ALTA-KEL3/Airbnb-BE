@@ -238,3 +238,22 @@ func (hh *homestayHandler) Update() echo.HandlerFunc {
 		}
 	}
 }
+
+func (hh *homestayHandler) MyHomestay() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		token := c.Get("user")
+		res, err := hh.srv.MyHomestay(token)
+
+		if err != nil {
+			return c.JSON(helper.PrintErrorResponse(err.Error()))
+		}
+		result := []Homestay{}
+		for _, val := range res {
+			result = append(result, HomestayResponse(val))
+		}
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"data":    result,
+			"message": "success get all user homestays",
+		})
+	}
+}

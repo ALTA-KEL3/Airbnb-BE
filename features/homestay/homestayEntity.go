@@ -10,13 +10,13 @@ type Core struct {
 	ID       uint
 	Name     string `validate:"required"`
 	Address  string `validate:"required"`
-	Phone    string 
+	Phone    string
 	Price    float64
 	Facility string
 	Image1   string
 	Image2   string
 	Image3   string
-	Role string
+	Role     string
 	UserID   uint
 }
 

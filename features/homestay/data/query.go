@@ -111,3 +111,17 @@ func (hq *homestayQuery) Update(userID uint, homestayID uint, updateHomestay hom
 	}
 	return updateHomestay, nil
 }
+
+func (hq *homestayQuery) MyHomestay(userID uint) ([]homestay.Core, error) {
+	res := []Homestay{}
+	if err := hq.db.Where("user_id = ?", userID).Order("created_at desc").Find(&res).Error; err != nil {
+		log.Println("get homestay data query error : ", err.Error())
+		return []homestay.Core{}, err
+	}
+	result := []homestay.Core{}
+	for _, val := range res {
+		result = append(result, ModelToCore(val))
+	}
+
+	return result, nil
+}

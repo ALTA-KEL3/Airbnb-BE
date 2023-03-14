@@ -130,3 +130,21 @@ func (hs *homestayService) Delete(token interface{}, homestayID uint) error {
 
 	return nil
 }
+
+func (hs *homestayService) MyHomestay(token interface{}) ([]homestay.Core, error) {
+	id := helper.ExtractToken(token)
+
+	res, err := hs.Data.MyHomestay(uint(id))
+
+	if err != nil {
+		msg := ""
+		if strings.Contains(err.Error(), "not found") {
+			msg = "homestay not found"
+		} else {
+			msg = "there is a problem with the server"
+		}
+		return []homestay.Core{}, errors.New(msg)
+	}
+
+	return res, nil
+}

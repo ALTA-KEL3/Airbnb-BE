@@ -100,7 +100,7 @@ func (us *userService) Update(token interface{}, fileData multipart.FileHeader, 
 	updateData.Password = string(hashed)
 	log.Println("size:", fileData.Size)
 
-	url, err := helper.GetUrlImagesFromAWS(fileData)
+	url, err := helper.GetUrlImagesFromAWS1(fileData)
 	if err != nil {
 		return user.Core{}, errors.New("validate: " + err.Error())
 	}

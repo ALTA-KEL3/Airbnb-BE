@@ -11,7 +11,10 @@ type PostHomestayReq struct {
 	Phone      string  `json:"phone" form:"phone"`
 	Price      float64 `json:"price" form:"price"`
 	Facility   string  `json:"facility" form:"facility"`
-	FileHeader multipart.FileHeader
+	FileHeader1 multipart.FileHeader
+	FileHeader2 multipart.FileHeader
+	FileHeader3 multipart.FileHeader
+
 }
 
 // type UserCore struct {

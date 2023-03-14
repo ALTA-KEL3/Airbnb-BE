@@ -29,10 +29,10 @@ type HomestayHandler interface {
 }
 
 type HomestayService interface {
-	Add(token interface{}, fileData multipart.FileHeader, newHomestay Core) (Core, error)
+	Add(token interface{}, fileData1 multipart.FileHeader, fileData2 multipart.FileHeader, fileData3 multipart.FileHeader, newHomestay Core) (Core, error)
 	ShowAll() ([]Core, error)
 	ShowDetail(homestayID uint) (Core, error)
-	Update(token interface{}, homestayID uint, fileData multipart.FileHeader, updateData Core) (Core, error)
+	Update(token interface{}, homestayID uint, fileData1 multipart.FileHeader, fileData2 multipart.FileHeader, fileData3 multipart.FileHeader, updateData Core) (Core, error)
 	Delete(token interface{}, homestayID uint) error
 }
 

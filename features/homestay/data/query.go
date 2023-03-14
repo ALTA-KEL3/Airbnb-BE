@@ -19,20 +19,24 @@ func New(db *gorm.DB) homestay.HomestayData {
 }
 
 // Add implements homestay.HomestayData
-func (hq *homestayQuery) Add(userRole string, userID uint, newHomestay homestay.Core) (homestay.Core, error) {
-	if userRole != "hoster" {
-		log.Println("access denied, cannot add product because you are not hoster")
-		return homestay.Core{}, errors.New("access denied, cannot add product because you are not hoster")
-	}
+func (hq *homestayQuery) Add(userID uint, newHomestay homestay.Core) (homestay.Core, error) {
+
+	// if newHomestay.Role != "hoster" {
+	// 	log.Println("access denied, cannot add product because you are not hoster")
+	// 	return homestay.Core{}, errors.New("access denied, cannot add product because you are not hoster")
+	// }
 	cnv := CoreToModel(newHomestay)
+	cnv.UserID = uint(userID)
 	err := hq.db.Create(&cnv).Error
 	if err != nil {
 		log.Println("query error", err.Error())
 		return homestay.Core{}, errors.New("server error")
 	}
-
 	newHomestay.ID = cnv.ID
+	newHomestay.Role = cnv.Role
+
 	return newHomestay, nil
+
 }
 
 // Delete implements homestay.HomestayData
@@ -61,7 +65,18 @@ func (hq *homestayQuery) Delete(userID uint, homestayID uint) error {
 
 // ShowAll implements homestay.HomestayData
 func (hq *homestayQuery) ShowAll() ([]homestay.Core, error) {
-	panic("unimplemented")
+	res := []Homestay{}
+	err := hq.db.Find(&res).Error
+	if err != nil {
+		log.Println("data not found", err.Error())
+		return []homestay.Core{}, errors.New("data not found")
+	}
+	result := []homestay.Core{}
+	for _, val := range res {
+		result = append(result, ModelToCore(val))
+
+	}
+	return result, nil
 }
 
 // ShowDetail implements homestay.HomestayData

@@ -14,6 +14,15 @@ type PostHomestayReq struct {
 	FileHeader multipart.FileHeader
 }
 
+// type UserCore struct {
+// 	ID             uint   `json:"id" form:"id"`
+// 	Name           string `json:"name" form:"name"`
+// 	Address        string `json:"address" form:"address"`
+// 	Phone          string `json:"phone" form:"phone"`
+// 	Role           string `json:"role" form:"role"`
+// 	ProfilePicture string `json:"profile_picture" form:"profile_picture"`
+// }
+
 func ReqToCore(data interface{}) *homestay.Core {
 	res := homestay.Core{}
 

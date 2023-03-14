@@ -7,8 +7,13 @@ import (
 	userServ "airbnb/features/user/services"
 
 	homestayData "airbnb/features/homestay/data"
-	homestayHdl	"airbnb/features/homestay/handler"
+	homestayHdl "airbnb/features/homestay/handler"
 	homestaySrv "airbnb/features/homestay/services"
+
+	feedbackData "airbnb/features/feedback/data"
+	feedbackHdl "airbnb/features/feedback/handler"
+	feedbackSrv "airbnb/features/feedback/services"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"gorm.io/gorm"
@@ -22,6 +27,10 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	homestayData := homestayData.New(db)
 	homestayService := homestaySrv.New(homestayData)
 	homestayHandler := homestayHdl.New(homestayService)
+
+	feedbackData := feedbackData.New(db)
+	feedbackService := feedbackSrv.New(feedbackData)
+	feedbackHandler := feedbackHdl.New(feedbackService)
 
 	// AUTH
 	e.POST("/login", userHandler.Login())
@@ -38,4 +47,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.GET("/homestays/:homestay_id", homestayHandler.ShowDetail(), middleware.JWT([]byte(config.JWTKey)))
 	e.PUT("/homestays/:homestay_id", homestayHandler.Update(), middleware.JWT([]byte(config.JWTKey)))
 	e.DELETE("/homestays/:homestay_id", homestayHandler.Delete(), middleware.JWT([]byte(config.JWTKey)))
+
+	// FEEDBACK
+	e.POST("/feedbacks", feedbackHandler.AddFeedback(), middleware.JWT([]byte(config.JWTKey)))
 }

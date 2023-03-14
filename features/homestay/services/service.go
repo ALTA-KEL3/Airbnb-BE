@@ -2,7 +2,6 @@ package services
 
 import (
 	"airbnb/features/homestay"
-	"airbnb/features/user"
 	"airbnb/helper"
 	"errors"
 	"log"
@@ -24,11 +23,6 @@ func New(data homestay.HomestayData) homestay.HomestayService {
 }
 
 func (hs *homestayService) Add(token interface{}, fileData multipart.FileHeader, newHomestay homestay.Core) (homestay.Core, error) {
-	var users user.Core
-	if users.Role != "hoster"{
-		return homestay.Core{}, errors.New("role option only: hoster")
-	}
-
 	userID := helper.ExtractToken(token)
 
 	if userID <= 0 {
@@ -43,12 +37,10 @@ func (hs *homestayService) Add(token interface{}, fileData multipart.FileHeader,
 	newHomestay.Image2 = url
 	newHomestay.Image3 = url
 
-	// userRole := "hoster"
-
-	res, err := hs.Data.Add(users.Role, uint(userID), newHomestay)
+	res, err := hs.Data.Add(uint(userID), newHomestay)
 
 	if err != nil {
-		log.Println("cannot post book", err.Error())
+		log.Println("cannot post homestay", err.Error())
 		return homestay.Core{}, errors.New("server error")
 	}
 
@@ -59,8 +51,8 @@ func (hs *homestayService) ShowAll() ([]homestay.Core, error) {
 	res, err := hs.Data.ShowAll()
 
 	if err != nil {
-		if strings.Contains(err.Error(), "book") {
-			return []homestay.Core{}, errors.New("book not found")
+		if strings.Contains(err.Error(), "homestay") {
+			return []homestay.Core{}, errors.New("homestay not found")
 		} else {
 			return []homestay.Core{}, errors.New("internal server error")
 		}

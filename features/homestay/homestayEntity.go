@@ -10,12 +10,13 @@ type Core struct {
 	ID       uint
 	Name     string `validate:"required"`
 	Address  string `validate:"required"`
-	Phone    string `validate:"required"`
+	Phone    string 
 	Price    float64
 	Facility string
 	Image1   string
 	Image2   string
 	Image3   string
+	Role string
 	UserID   uint
 }
 
@@ -36,7 +37,7 @@ type HomestayService interface {
 }
 
 type HomestayData interface {
-	Add(userRole string, userID uint, newHomestay Core) (Core, error)
+	Add(userID uint, newHomestay Core) (Core, error)
 	ShowAll() ([]Core, error)
 	ShowDetail(homestayID uint) (Core, error)
 	Update(userID uint, homestayID uint, updateHomestay Core) (Core, error)

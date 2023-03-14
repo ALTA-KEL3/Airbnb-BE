@@ -18,7 +18,7 @@ type Homestay struct {
 	Image2   string
 	Image3   string
 	UserID   uint
-	Role     string
+	// Role     string
 	User     user.User
 }
 
@@ -42,7 +42,7 @@ func ModelToCore(data Homestay) homestay.Core {
 		Image1:   data.Image1,
 		Image2:   data.Image2,
 		Image3:   data.Image3,
-		Role:     data.Role,
+		// Role:     data.Role,
 		UserID:   data.UserID,
 	}
 }
@@ -59,6 +59,6 @@ func CoreToModel(data homestay.Core) Homestay {
 		Image2:   data.Image2,
 		Image3:   data.Image3,
 		UserID:   data.UserID,
-		Role:     data.Role,
+		// Role:     data.Role,
 	}
 }

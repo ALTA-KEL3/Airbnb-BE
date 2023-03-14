@@ -2,6 +2,7 @@ package handler
 
 import (
 	"airbnb/features/homestay"
+	"airbnb/features/user"
 	"airbnb/helper"
 	"log"
 	"net/http"
@@ -12,12 +13,14 @@ import (
 )
 
 type homestayHandler struct {
-	srv homestay.HomestayService
+	srv    homestay.HomestayService
+	usrSrv user.UserService
 }
 
-func New(srv homestay.HomestayService) homestay.HomestayHandler {
+func New(srv homestay.HomestayService, usrSrvc user.UserService) homestay.HomestayHandler {
 	return &homestayHandler{
-		srv: srv,
+		srv:    srv,
+		usrSrv: usrSrvc,
 	}
 }
 
@@ -26,6 +29,16 @@ func (hh *homestayHandler) Add() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		token := c.Get("user")
 		input := PostHomestayReq{}
+
+		user, errr := hh.usrSrv.Profile(token)
+		if errr != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "unable to process data"})
+
+		}
+		if user.Role != "hoster" {
+			log.Println("access denied, cannot add product because you are not hoster")
+			return c.JSON(http.StatusUnauthorized, map[string]interface{}{"message": "access denied"})
+		}
 
 		err := c.Bind(&input)
 		if err != nil {
@@ -74,6 +87,8 @@ func (hh *homestayHandler) Add() echo.HandlerFunc {
 				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "unable to process data"})
 			}
 		}
+
+		res.UserID = user.ID
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"data":    res,

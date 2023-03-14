@@ -20,8 +20,7 @@ func New(db *gorm.DB) homestay.HomestayData {
 
 // Add implements homestay.HomestayData
 func (hq *homestayQuery) Add(userID uint, newHomestay homestay.Core) (homestay.Core, error) {
-
-	// if newHomestay.Role != "hoster" {
+	// if user.Role != "hoster" {
 	// 	log.Println("access denied, cannot add product because you are not hoster")
 	// 	return homestay.Core{}, errors.New("access denied, cannot add product because you are not hoster")
 	// }
@@ -33,7 +32,7 @@ func (hq *homestayQuery) Add(userID uint, newHomestay homestay.Core) (homestay.C
 		return homestay.Core{}, errors.New("server error")
 	}
 	newHomestay.ID = cnv.ID
-	newHomestay.Role = cnv.Role
+	// newHomestay.Role = cnv.Role
 
 	return newHomestay, nil
 

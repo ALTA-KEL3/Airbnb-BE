@@ -19,13 +19,16 @@ type Homestay struct {
 
 type FeedbackHandler interface {
 	AddFeedback() echo.HandlerFunc
+	ListFeedback() echo.HandlerFunc
 }
 
 type FeedbackServiceInterface interface {
 	AddFeedback(token interface{}, homestayID uint, newFeedback FeedbackCore) (FeedbackCore, error)
+	ListFeedback(token interface{}, homestayID uint) ([]FeedbackCore, error)
 }
 
 type FeedbackDataInterface interface {
 	AddFeedback(userID uint, newFeedback FeedbackCore) (FeedbackCore, error)
+	ListFeedback(userID uint, homestayID uint) ([]FeedbackCore, error)
 }
 

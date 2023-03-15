@@ -33,3 +33,18 @@ func (cq *feedbackQuery) AddFeedback(userID uint, newFeedback feedback.FeedbackC
 
 	return newFeedback, nil
 }
+
+// ListFeedback implements feedback.FeedbackDataInterface
+func (cq *feedbackQuery) ListFeedback(userID uint, homestayID uint) ([]feedback.FeedbackCore, error) {
+	res := []Feedback{}
+	if err := cq.db.Where("user_id = ?", userID).Order("created_at desc").Find(&res).Error; err != nil {
+		log.Println("get feedback data query error : ", err.Error())
+		return []feedback.FeedbackCore{}, err
+	}
+	result := []feedback.FeedbackCore{}
+	for _, val := range res {
+		result = append(result, FeedbackDataToCore(val))
+	}
+
+	return result, nil
+}

@@ -276,7 +276,7 @@ paths:
                   data:
                     - id: 1
                       name: "Villa puncak"
-                      rating: 4.5
+                      total_rating: 4.5
                       address: "jl. kenanga, Malang"
                       phone: 089777777
                       price: 300000
@@ -284,7 +284,7 @@ paths:
                       image1: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
                     - id: 2
                       name: "Villa puncak"
-                      rating: 4.5
+                      total_rating: 4.5
                       address: "jl. kenanga, Malang"
                       phone: 089777777
                       price: 300000
@@ -326,6 +326,7 @@ paths:
                   data:
                     id: 1
                     name: "Villa puncak"
+                    total_rating: 5
                     address: "jl. kenanga, Malang"
                     phone: "089777777"
                     price: 300000
@@ -333,13 +334,6 @@ paths:
                     image1: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
                     image2: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
                     image3: AAkGBhQSERUUExQVFRUWGRwaGBgYGB0dGxkcHx
-                    feedback:
-                      - id: 1
-                        rating: 4.5
-                        note: "oke"
-                      - id: 2
-                        rating: 4.5
-                        note: "boleh deh"
                   message: "Success Get Homestay by Id"
         400 :
           $ref : "#/components/responses/400"  
@@ -427,7 +421,7 @@ paths:
           $ref: "#/components/responses/500"
           
 # SHOW OWN HOMESTAY LIST
-  /homestays/{user_id}:
+  /myhomestays:
     get:
       tags: 
         - "Homestay"
@@ -435,13 +429,6 @@ paths:
       description: "show own homestay list"
       security:
         - JWTAuth: []
-      parameters:
-        - name: user_id
-          description: "ID user who have homestay"
-          required: true
-          in: path
-          schema:
-            type: integer
       responses:
         200:
           description: "show own homestay list"
@@ -454,19 +441,19 @@ paths:
                   - id: 1
                     user_id: 1
                     name: "Villa 1"
-                    rating: 4.5
+                    total_rating: 4.5
                     facility: "5 Kamar Tidur, 2 Kamar Mandi dalam, AC, Private Pool, dan Rooftop"
                     price: 500000
                   - id: 2
                     user_id: 1
                     name: "Villa 2"
-                    rating: 4.5
+                    total_rating: 4.5
                     facility: "5 Kamar Tidur, 2 Kamar Mandi dalam, AC, Private Pool, dan Rooftop"
                     price: 500000
                   - id: 3
                     user_id: 1
                     name: "Villa 3"
-                    rating: 4.5
+                    total_rating: 4.5
                     facility: "5 Kamar Tidur, 2 Kamar Mandi dalam, AC, Private Pool, dan Rooftop"
                     price: 500000
                 message: "success show own homestay list"
@@ -628,6 +615,44 @@ paths:
         500:
           $ref: "#/components/responses/500"
 
+  /homestays/{homestay_id}/feedbacks:
+    get:
+      tags:
+        - "Homestay"
+      summary: "Show feedback list"
+      description: "Show feedback list by homestay ID"
+      security:
+        - JWTAuth: []
+      parameters:
+        - name: homestay_id
+          description: "ID homestay"
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "show own list feedback in homestay"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/responseObjectArr"
+              example:
+                data: 
+                - id: 1
+                  rating: 4.5
+                  note: "oke"
+                  user:
+                    - id: 1
+                      name: "Aldi"
+                      photo_profile: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                - id: 2
+                  rating: 4.5
+                  note: "boleh deh"
+                  user:
+                    - id: 2
+                      name: "Soleh"
+                      photo_profile: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
 components:
   schemas:
 

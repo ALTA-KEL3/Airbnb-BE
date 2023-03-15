@@ -3,8 +3,10 @@ package handler
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"airbnb/features/feedback"
+	"airbnb/helper"
 
 	"github.com/labstack/echo/v4"
 )
@@ -40,3 +42,27 @@ func (cc *feedbackHandler) AddFeedback() echo.HandlerFunc {
 	}
 }
 
+// ListFeedback implements feedback.FeedbackHandler
+func (cc *feedbackHandler) ListFeedback() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		token := c.Get("user")
+
+		paramID := c.Param("id")
+
+		homestayID, _ := strconv.Atoi(paramID)
+
+		res, err := cc.srv.ListFeedback(token, uint(homestayID))
+
+		if err != nil {
+			return c.JSON(helper.PrintErrorResponse(err.Error()))
+		}
+		result := []FeedbackResp{}
+		for _, val := range res {
+			result = append(result, FeedbackResponse(val))
+		}
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"data":    result,
+			"message": "success get all user homestays",
+		})
+	}
+}

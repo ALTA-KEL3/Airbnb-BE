@@ -2,6 +2,7 @@ package data
 
 import (
 	"airbnb/features/feedback"
+
 	// homestay "airbnb/features/homestay/data"
 
 	"gorm.io/gorm"
@@ -63,5 +64,33 @@ func FeedbackCoreToFeedback(dataCore feedback.FeedbackCore) Feedback {
 		// Name:       dataCore.Name,
 		HomestayID:    dataCore.HomestayID,
 		ReservationID: dataCore.ReservationID,
+		User: User{
+			Name:           dataCore.User.Name,
+			ProfilePicture: dataCore.User.ProfilePicture,
+		},
 	}
 }
+
+// func FeedbackDataToCore(data Feedback) feedback.FeedbackCore {
+// 	return feedback.FeedbackCore{
+// 		ID:            data.ID,
+// 		Rating:        data.Rating,
+// 		Note:          data.Note,
+// 		UserID:        data.UserID,
+// 		HomestayID:    data.HomestayID,
+// 		ReservationID: data.ReservationID,
+// 		User:          feedback.User{},
+// 	}
+// }
+
+// func FeedbackCoreToFeedback(data feedback.FeedbackCore) Feedback {
+// 	return Feedback{
+// 		Model:         gorm.Model{ID: data.ID},
+// 		Rating:        data.Rating,
+// 		Note:          data.Note,
+// 		UserID:        data.UserID,
+// 		HomestayID:    data.HomestayID,
+// 		ReservationID: data.ReservationID,
+// 		User:          User{},
+// 	}
+// }

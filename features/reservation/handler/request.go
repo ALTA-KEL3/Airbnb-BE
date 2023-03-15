@@ -22,3 +22,44 @@ package handler
 // 		Checkout:   Checkout,
 // 	}
 // }
+
+
+import (
+	// "math"
+	"time"
+
+	"airbnb/features/reservation"
+)
+
+type ReservationRequest struct {
+	Checkin    string `json:"checkin" form:"checkin"`
+	Checkout   string `json:"checkout" form:"checkout"`
+	HomestayID int    `json:"homestay_id" form:"homestay_id"`
+	Homestay   Homestay
+}
+
+type Homestay struct {
+	ID          uint
+	BookedStart time.Time
+	BookedEnd   time.Time
+}
+
+
+var dateLayout = "2006-01-02"
+
+
+func ToCore(reservationInput ReservationRequest) reservation.ReservationCore {
+	in, _ := time.Parse(dateLayout, reservationInput.Checkin)
+	out, _ := time.Parse(dateLayout, reservationInput.Checkout)
+	return reservation.ReservationCore{
+		Checkin:    in,
+		Checkout:   out,
+		HomestayID: uint(reservationInput.HomestayID),
+		Homestay: reservation.Homestay{
+			ID:          reservationInput.Homestay.ID,
+			// BookedStart: reservationInput.Homestay.BookedStart,
+			BookedEnd:   reservationInput.Homestay.BookedEnd,
+		},
+	}
+}
+

@@ -1,38 +1,39 @@
 package data
 
-// import (
-// 	"airbnb/features/homestay/data"
-// 	"airbnb/features/reservation"
-// 	r "airbnb/features/reservation/services"
+import (
+	// "errors"
 
-// 	"gorm.io/gorm"
-// )
+	"airbnb/features/reservation"
 
-// type reservationQuery struct {
-// 	db *gorm.DB
-// }
+	"gorm.io/gorm"
+)
 
-// func NewReservation(db *gorm.DB) reservation.ReservationDataInterface {
-// 	return &reservationQuery{
-// 		db: db,
-// 	}
-// }
+type reservationRepository struct {
+	db *gorm.DB
+}
 
-// func (d *reservationQuery) CreateReservation(input reservation.ReservationCore) ( reservation.ReservationCore, error) {
-// 	model := data.Homestay{}
-// 	tx := d.db.First(&model, input.HomestayID)
-// 	if tx.Error != nil {
-// 		return reservation.ReservationCore{}, tx.Error
-// 	}
-// 	// input.Price = model.Price
-// 	input.TotalPrice = r.Checkin(input.Checkin, input.Checkout) * float64(model.Price)
+func New(db *gorm.DB) reservation.ReservationDataInterface {
+	return &reservationRepository{
+		db: db,
+	}
+}
 
-// 	res := CoretoModel(input) //dari gorm model ke user core
+// func (r *reservationRepository) CheckAvailability(input reservation.ReservationCore) (data reservation.Homestay, err error) {
+func (r *reservationRepository) CheckAvailability(input reservation.ReservationCore) (data reservation.Homestay, err error) {
 
-// 	err := d.db.Create(&res).Error // proses insert data
+	// var reservation Reservation
+	var homestay Homestay
+	var reservation Reservation
 
-// 	if err != nil {
-// 		return reservation.ReservationCore{}, tx.Error
-// 	}
-// 	return input, nil
-// }
+	tx := r.db.Where("homestay_id=? AND ? BETWEEN booked_start AND booked_end OR ? BETWEEN booked_start AND booked_end", input.HomestayID, input.Checkin, input.Checkout).First(&reservation, input.HomestayID) //
+
+	if tx.Error != nil {
+		return data, tx.Error
+	}
+	data = homestay.toCore()
+	return data, nil
+}
+
+// SELECT * FROM reservations WHERE room_id = ? AND ? BETWEEN booked_start AND booked_end OR ? BETWEEN booked_start AND booked_end
+// Select(“users.name, profiles.bio”).Joins(“INNER JOIN profiles ON profiles.user_id = users.id”).Find(&users)
+// db.Table("table1").Joins("INNER JOIN table2 ON table1.col2 = table2.col2").Select("table1.col1, table1.col2, table2.col3").Where("table1.col1 = ?", input).Find(&results).

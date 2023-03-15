@@ -3,6 +3,7 @@ package reservation
 import (
 	// "airbnb/features/homestay"
 	// "airbnb/features/user"
+	"github.com/labstack/echo/v4"
 	"time"
 )
 
@@ -17,10 +18,17 @@ type ReservationCore struct {
 	// User       user.Core
 }
 
+type ReservationHandler interface {
+	CreateReservation() echo.HandlerFunc
+	GetReservationHistory() echo.HandlerFunc
+}
+
 type ReservationServiceInterface interface {
-	CreateReservation(input ReservationCore) (ReservationCore, error)
+	CreateReservation(token interface{}, totalPrice float64) (ReservationCore, string, error)
+	GetOrderHistory(token interface{}) ([]ReservationCore, error)
 }
 
 type ReservationDataInterface interface {
-	CreateReservation(input ReservationCore) (ReservationCore, error)
+	CreateReservation(userID uint, totalPrice float64) (ReservationCore, string, error)
+	GetOrderHistory(userID uint) ([]ReservationCore, error)
 }

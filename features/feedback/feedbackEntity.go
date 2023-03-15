@@ -31,11 +31,11 @@ type FeedbackHandler interface {
 }
 
 type FeedbackServiceInterface interface {
-	AddFeedback(token interface{}, homestayID uint, newFeedback FeedbackCore) (FeedbackCore, error)
+	AddFeedback(token interface{}, homestayID uint, newFeedback FeedbackCore) error
 	ListFeedback(token interface{}, homestayID uint) ([]FeedbackCore, error)
 }
 
 type FeedbackDataInterface interface {
-	AddFeedback(userID uint, newFeedback FeedbackCore) (FeedbackCore, error)
+	AddFeedback(userID uint, newFeedback FeedbackCore) error
 	ListFeedback(userID uint, homestayID uint) ([]FeedbackCore, error)
 }

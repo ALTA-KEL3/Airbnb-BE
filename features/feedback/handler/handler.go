@@ -30,14 +30,13 @@ func (cc *feedbackHandler) AddFeedback() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "input format incorrect"})
 		}
 
-		res, err := cc.srv.AddFeedback(token, input.HomestayID, *ReqaToCore(input))
+		err = cc.srv.AddFeedback(token, input.HomestayID, *ReqaToCore(input))
 		if err != nil {
 			log.Println("error running add feedback service: ", err.Error())
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "server problem"})
 		}
-		log.Println(res)
 		return c.JSON(http.StatusCreated, map[string]interface{}{
-			"message": "success add book to feedback",
+			"message": "success add feedback",
 		})
 	}
 }

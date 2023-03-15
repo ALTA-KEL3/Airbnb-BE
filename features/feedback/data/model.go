@@ -23,8 +23,6 @@ type Feedback struct {
 type User struct {
 	gorm.Model
 	Name           string
-	Email          string
-	Phone          string
 	ProfilePicture string
 	// Feedback []Feedback `gorm:"foreignKey:UserID"`
 }

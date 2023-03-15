@@ -20,13 +20,13 @@ func New(cd feedback.FeedbackDataInterface) feedback.FeedbackServiceInterface {
 	}
 }
 
-func (cuc *feedbackService) AddFeedback(token interface{}, homestayID uint, newFeedback feedback.FeedbackCore) (feedback.FeedbackCore, error) {
+func (cuc *feedbackService) AddFeedback(token interface{}, homestayID uint, newFeedback feedback.FeedbackCore) error {
 	userId := helper.ExtractToken(token)
 	if userId <= 0 {
 		log.Println("error extract token add feedback")
-		return feedback.FeedbackCore{}, errors.New("user not found")
+		return errors.New("user not found")
 	}
-	res, err := cuc.qry.AddFeedback(uint(userId), newFeedback)
+	err := cuc.qry.AddFeedback(uint(userId), newFeedback)
 	if err != nil {
 		msg := ""
 		if strings.Contains(err.Error(), "not found") {
@@ -35,9 +35,9 @@ func (cuc *feedbackService) AddFeedback(token interface{}, homestayID uint, newF
 			msg = "server problem"
 		}
 		log.Println("error add query in service: ", err.Error())
-		return feedback.FeedbackCore{}, errors.New(msg)
+		return errors.New(msg)
 	}
-	return res, nil
+	return nil
 }
 
 // ListFeedback implements feedback.FeedbackServiceInterface

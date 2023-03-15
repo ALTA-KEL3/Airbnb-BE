@@ -49,7 +49,7 @@ func (cc *feedbackHandler) ListFeedback() echo.HandlerFunc {
 
 		paramID := c.Param("id")
 
-		homestayID, err := strconv.Atoi(paramID)
+		homestayID, _ := strconv.Atoi(paramID)
 
 		res, err := cc.srv.ListFeedback(token, uint(homestayID))
 

@@ -145,7 +145,7 @@ func (hh *homestayHandler) ShowAll() echo.HandlerFunc {
 // ShowDetail implements homestay.HomestayHandler
 func (hh *homestayHandler) ShowDetail() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		paramID := c.Param("id")
+		paramID := c.Param("homestay_id")
 
 		homestayID, err := strconv.Atoi(paramID)
 		if err != nil {
@@ -171,7 +171,7 @@ func (hh *homestayHandler) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		token := c.Get("user")
 
-		paramID := c.Param("id")
+		paramID := c.Param("homestay_id")
 
 		homestayID, err := strconv.Atoi(paramID)
 

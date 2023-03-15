@@ -48,6 +48,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	e.PUT("/homestays/:homestay_id", homestayHandler.Update(), middleware.JWT([]byte(config.JWTKey)))
 	e.DELETE("/homestays/:homestay_id", homestayHandler.Delete(), middleware.JWT([]byte(config.JWTKey)))
 	e.GET("/myhomestays", homestayHandler.MyHomestay(), middleware.JWT([]byte(config.JWTKey)))
+	e.GET("/homestays/:homestay_id/feedbacks", feedbackHandler.ListFeedback(), middleware.JWT([]byte(config.JWTKey)))
 
 	// FEEDBACK
 	e.POST("/feedbacks", feedbackHandler.AddFeedback(), middleware.JWT([]byte(config.JWTKey)))

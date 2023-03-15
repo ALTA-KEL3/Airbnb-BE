@@ -421,7 +421,7 @@ paths:
           $ref: "#/components/responses/500"
           
 # SHOW OWN HOMESTAY LIST
-  /homestays/{user_id}:
+  /myhomestays:
     get:
       tags: 
         - "Homestay"
@@ -429,13 +429,6 @@ paths:
       description: "show own homestay list"
       security:
         - JWTAuth: []
-      parameters:
-        - name: user_id
-          description: "ID user who have homestay"
-          required: true
-          in: path
-          schema:
-            type: integer
       responses:
         200:
           description: "show own homestay list"
@@ -622,10 +615,10 @@ paths:
         500:
           $ref: "#/components/responses/500"
 
-  /feedbacks/{homestay_id}:
+  /homestays/{homestay_id}/feedbacks:
     get:
       tags:
-        - "Feedback"
+        - "Homestay"
       summary: "Show feedback list"
       description: "Show feedback list by homestay ID"
       security:

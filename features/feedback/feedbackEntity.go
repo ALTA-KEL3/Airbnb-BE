@@ -3,18 +3,26 @@ package feedback
 import "github.com/labstack/echo/v4"
 
 type FeedbackCore struct {
-	ID         uint
-	Rating     uint
-	Note       string
-	UserID     uint
+	ID     uint
+	Rating uint
+	Note   string
+	UserID uint
 	// Name       string
-	HomestayID uint
+	HomestayID    uint
+	ReservationID uint
+	User          User
 }
 
-type Homestay struct {
-	ID       uint
-	// Name     string
-	Feedback []FeedbackCore
+// type Homestay struct {
+// 	ID uint
+// 	// Name     string
+// 	Feedback []FeedbackCore
+// }
+
+type User struct {
+	ID             uint
+	Name           string
+	ProfilePicture string
 }
 
 type FeedbackHandler interface {
@@ -23,12 +31,11 @@ type FeedbackHandler interface {
 }
 
 type FeedbackServiceInterface interface {
-	AddFeedback(token interface{}, homestayID uint, newFeedback FeedbackCore) (FeedbackCore, error)
+	AddFeedback(token interface{}, homestayID uint, newFeedback FeedbackCore) error
 	ListFeedback(token interface{}, homestayID uint) ([]FeedbackCore, error)
 }
 
 type FeedbackDataInterface interface {
-	AddFeedback(userID uint, newFeedback FeedbackCore) (FeedbackCore, error)
+	AddFeedback(userID uint, newFeedback FeedbackCore) error
 	ListFeedback(userID uint, homestayID uint) ([]FeedbackCore, error)
 }
-

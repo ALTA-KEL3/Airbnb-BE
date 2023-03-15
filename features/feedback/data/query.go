@@ -19,25 +19,25 @@ func New(db *gorm.DB) feedback.FeedbackDataInterface {
 	}
 }
 
-func (cq *feedbackQuery) AddFeedback(userID uint, newFeedback feedback.FeedbackCore) (feedback.FeedbackCore, error) {
+func (cq *feedbackQuery) AddFeedback(userID uint, newFeedback feedback.FeedbackCore) error {
 	cnv := FeedbackCoreToFeedback(newFeedback)
 	cnv.UserID = uint(userID)
 
 	err := cq.db.Create(&cnv).Error
 	if err != nil {
 		log.Println("query error", err.Error())
-		return feedback.FeedbackCore{}, errors.New("server error")
+		return errors.New("server error")
 	}
 	newFeedback.ID = cnv.ID
 	newFeedback.HomestayID = cnv.HomestayID
 
-	return newFeedback, nil
+	return nil
 }
 
 // ListFeedback implements feedback.FeedbackDataInterface
 func (cq *feedbackQuery) ListFeedback(userID uint, homestayID uint) ([]feedback.FeedbackCore, error) {
 	res := []Feedback{}
-	if err := cq.db.Where("user_id = ?", userID).Order("created_at desc").Find(&res).Error; err != nil {
+	if err := cq.db.Preload("User").Order("created_at desc").Find(&res).Error; err != nil {
 		log.Println("get feedback data query error : ", err.Error())
 		return []feedback.FeedbackCore{}, err
 	}

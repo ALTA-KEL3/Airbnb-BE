@@ -89,15 +89,7 @@ func (hs *homestayService) Update(token interface{}, homestayID uint, fileData1 
 		return homestay.Core{}, errors.New("user not found")
 	}
 
-	url1, err := helper.GetUrlImagesFromAWS1(fileData1)
-	if err != nil {
-		return homestay.Core{}, errors.New("validate: " + err.Error())
-	}
-	url2, err := helper.GetUrlImagesFromAWS2(fileData2)
-	if err != nil {
-		return homestay.Core{}, errors.New("validate: " + err.Error())
-	}
-	url3, err := helper.GetUrlImagesFromAWS3(fileData3)
+	url, err := helper.GetUrlImagesFromAWS(fileData)
 	if err != nil {
 		return homestay.Core{}, errors.New("validate: " + err.Error())
 	}

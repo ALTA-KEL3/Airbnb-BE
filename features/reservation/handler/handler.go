@@ -27,12 +27,12 @@ func (d *reservationHandler) CheckAvailability() echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 
-		input := ReservationRequest{}
+		input := ReservationRequestCheck{}
 		errBind := c.Bind(&input)
 		if errBind != nil {
 			return c.JSON(http.StatusNotFound, helper.ResponseFail("requested resource was not found"+errBind.Error()))
 		}
-		dataInput := ToCore(input)
+		dataInput := ToCoreCheck(input)
 		res, err := d.srv.CheckAvailability(dataInput)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, helper.ResponseFail("error read data"))
@@ -41,7 +41,7 @@ func (d *reservationHandler) CheckAvailability() echo.HandlerFunc {
 		start := dataInput.Checkin.Format("2006-01-02")
 		end := dataInput.Checkout.Format("2006-01-02")
 
-		dataResponse := fromCoreAvail(res)
+		dataResponse := fromCoreAvailCheck(res)
 		dataResponse.HomestayID = dataInput.HomestayID
 		dataResponse.Checkin = start
 		dataResponse.Checkout = end

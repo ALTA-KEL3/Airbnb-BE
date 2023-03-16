@@ -20,7 +20,7 @@ func (r *reservationRepository) CheckAvailability(input reservation.ReservationC
 
 	var reservation Reservation
 
-	tx := r.db.Where("homestay_id=? AND ? BETWEEN booked_start AND booked_end OR ? BETWEEN booked_start AND booked_end", input.HomestayID, input.Checkin, input.Checkout).First(&reservation, input.HomestayID) //
+	tx := r.db.Where("homestay_id=? AND ? BETWEEN checkin AND checkout OR ? BETWEEN checkout AND checkout", input.HomestayID, input.Checkin, input.Checkout).First(&reservation, input.HomestayID) //
 
 	if tx.Error != nil {
 		return data, tx.Error

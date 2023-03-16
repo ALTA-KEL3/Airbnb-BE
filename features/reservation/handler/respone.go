@@ -6,7 +6,7 @@ import (
 	"airbnb/features/reservation"
 )
 
-type ReservationResponse struct {
+type ReservationResponseCheck struct {
 	HomestayID uint   `json:"homestay_id"`
 	Checkin    string `json:"checkin"`
 	Checkout   string `json:"checkout"`
@@ -14,16 +14,16 @@ type ReservationResponse struct {
 
 // var dateLayout1 = "2006-01-02"
 
-func FromCore(dataCore reservation.ReservationCore) ReservationResponse {
-	return ReservationResponse{
+func FromCoreCheck(dataCore reservation.ReservationCore) ReservationResponseCheck {
+	return ReservationResponseCheck{
 		HomestayID: dataCore.HomestayID,
 		Checkin:    dataCore.Checkin.Format("2006-01-02"),
 		Checkout:   dataCore.Checkout.Format("2006-01-02"),
 	}
 }
 
-func fromCoreAvail(dataCore reservation.ReservationCore) ReservationResponse {
-	return ReservationResponse{
+func fromCoreAvailCheck(dataCore reservation.ReservationCore) ReservationResponseCheck {
+	return ReservationResponseCheck{
 		HomestayID: dataCore.ID,
 		Checkin:    dataCore.Checkin.Format("2006-01-02"),
 		Checkout:   dataCore.Checkout.Format("2006-01-02"),

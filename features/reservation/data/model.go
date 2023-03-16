@@ -10,15 +10,17 @@ import (
 
 type Reservation struct {
 	gorm.Model
-	Checkin     time.Time
-	Checkout    time.Time
-	BookedStart time.Time
-	BookedEnd   time.Time
-	TotalPrice  int
-	User        User
-	Homestay    Homestay
-	UserID      uint
-	HomestayID  uint
+	Checkin  time.Time
+	Checkout time.Time
+	// BookedStart time.Time
+	// BookedEnd   time.Time
+	Duration   int
+	TotalPrice int
+	User       User
+	Homestay   Homestay
+	UserID     uint
+	HomestayID uint
+	PaymentLink string
 }
 
 type User struct {

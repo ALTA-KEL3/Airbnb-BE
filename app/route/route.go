@@ -14,6 +14,10 @@ import (
 	feedbackHdl "airbnb/features/feedback/handler"
 	feedbackSrv "airbnb/features/feedback/services"
 
+	reservationData "airbnb/features/reservation/data"
+	reservationHdl "airbnb/features/reservation/handler"
+	reservationSrv "airbnb/features/reservation/services"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"gorm.io/gorm"
@@ -31,6 +35,10 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	feedbackData := feedbackData.New(db)
 	feedbackService := feedbackSrv.New(feedbackData)
 	feedbackHandler := feedbackHdl.New(feedbackService)
+
+	reservationData := reservationData.New(db)
+	reservationService := reservationSrv.New(reservationData)
+	reservationHandler := reservationHdl.New(reservationService, userService)
 
 	// AUTH
 	e.POST("/login", userHandler.Login())
@@ -52,4 +60,7 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 
 	// FEEDBACK
 	e.POST("/feedbacks", feedbackHandler.AddFeedback(), middleware.JWT([]byte(config.JWTKey)))
+
+		// RESERVATION
+		e.POST("reservations/check", reservationHandler.CheckAvailability(), middleware.JWT([]byte(config.JWTKey)))
 }

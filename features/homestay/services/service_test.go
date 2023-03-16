@@ -303,3 +303,67 @@ func TestShowAll(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 }
+
+func TestMyHomestay(t *testing.T) {
+	repo := mocks.NewHomestayData(t)
+	filePath := filepath.Join("..", "..", "..", "ERD.png")
+	imageTrue, err := os.Open(filePath)
+	if err != nil {
+		log.Println(err.Error())
+	}
+	imageTrueCnv := &multipart.FileHeader{
+		Filename: imageTrue.Name(),
+	}
+
+	resData := []homestay.Core{{
+		ID:       1,
+		Name:     "villa 1",
+		Address:  "Jogja",
+		Phone:    "081234567",
+		Price:    500000,
+		Image:    imageTrueCnv.Filename,
+		Facility: "5 Kamar Tidur, 2 Kamar Mandi dalam, AC, Private Pool, dan Rooftop",
+	}}
+
+	t.Run("success get user homestay", func(t *testing.T) {
+		repo.On("MyHomestay", uint(1)).Return(resData, nil).Once()
+		srv := New(repo)
+		_, token := helper.GenerateToken(1)
+		pToken := token.(*jwt.Token)
+		pToken.Valid = true
+		res, err := srv.MyHomestay(pToken)
+		assert.Nil(t, err)
+		assert.Equal(t, len(resData), len(res))
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("homestay not found", func(t *testing.T) {
+		repo.On("MyHomestay", uint(1)).Return([]homestay.Core{}, errors.New("homestay not found")).Once()
+
+		srv := New(repo)
+		_, token := helper.GenerateToken(1)
+		pToken := token.(*jwt.Token)
+		pToken.Valid = true
+
+		res, err := srv.MyHomestay(pToken)
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "not found")
+		assert.Equal(t, 0, len(res))
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("there is a problem with the server", func(t *testing.T) {
+		repo.On("MyHomestay", uint(1)).Return([]homestay.Core{}, errors.New("there is a problem with the server")).Once()
+
+		srv := New(repo)
+		_, token := helper.GenerateToken(1)
+		pToken := token.(*jwt.Token)
+		pToken.Valid = true
+
+		res, err := srv.MyHomestay(pToken)
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "server")
+		assert.Equal(t, 0, len(res))
+		repo.AssertExpectations(t)
+	})
+}

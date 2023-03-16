@@ -259,6 +259,14 @@ func (hh *homestayHandler) getRating(token interface{}, homestayID uint) (uint, 
 	}
 	for _, feedback := range rFeedback {
 		sum += uint(feedback.Rating)
+		if len(rFeedback) == 0 {
+			log.Println("No ratings found.")
+			return 0, nil
+		}
+	}
+
+	if sum == 0 {
+		return 0, nil
 	}
 	return uint(sum) / uint(len(rFeedback)), nil
 }

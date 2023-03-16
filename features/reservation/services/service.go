@@ -18,16 +18,7 @@ func New(data reservation.ReservationDataInterface) reservation.ReservationServi
 	}
 }
 
-// func (s *reservationService) CheckAvailability(input reservation.ReservationCore) (data reservation.Homestay, err error) {
-// 	data, err = s.reservationRepo.CheckAvailability(input)
-// 	if err != nil {
-// 		return data, errors.New("failed get data, error query")
-
-// 	}
-// 	return data, nil
-// }
-
-func (s *reservationService) CheckAvailability(input reservation.ReservationCore) (data reservation.Homestay,err error) {
+func (s *reservationService) CheckAvailability(input reservation.ReservationCore) (data reservation.ReservationCore ,err error) {
 	
 	data, err = s.reservationData.CheckAvailability(input)
 	if err != nil {

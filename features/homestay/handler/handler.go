@@ -262,3 +262,5 @@ func (hh *homestayHandler) getRating(token interface{}, homestayID uint) (uint, 
 	}
 	return uint(sum) / uint(len(rFeedback)), nil
 }
+
+// sudo

@@ -12,11 +12,11 @@ airbnb/features/homestay/services/service.go:51.16,52.48 1 0
 airbnb/features/homestay/services/service.go:52.48,54.4 1 0
 airbnb/features/homestay/services/service.go:54.9,56.4 1 0
 airbnb/features/homestay/services/service.go:58.2,58.17 1 0
-airbnb/features/homestay/services/service.go:61.79,64.16 2 0
-airbnb/features/homestay/services/service.go:64.16,65.49 1 0
-airbnb/features/homestay/services/service.go:65.49,67.4 1 0
-airbnb/features/homestay/services/service.go:67.9,69.4 1 0
-airbnb/features/homestay/services/service.go:72.2,72.17 1 0
+airbnb/features/homestay/services/service.go:61.79,64.16 2 1
+airbnb/features/homestay/services/service.go:64.16,65.49 1 1
+airbnb/features/homestay/services/service.go:65.49,67.4 1 1
+airbnb/features/homestay/services/service.go:67.9,69.4 1 1
+airbnb/features/homestay/services/service.go:72.2,72.17 1 1
 airbnb/features/homestay/services/service.go:75.156,78.17 2 1
 airbnb/features/homestay/services/service.go:78.17,80.3 1 1
 airbnb/features/homestay/services/service.go:82.2,83.16 2 1

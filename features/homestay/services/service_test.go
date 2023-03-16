@@ -199,3 +199,53 @@ func TestDelete(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 }
+
+func TestShowDetail(t *testing.T) {
+	repo := mocks.NewHomestayData(t)
+	filePath := filepath.Join("..", "..", "..", "ERD.png")
+	imageTrue, err := os.Open(filePath)
+	if err != nil {
+		log.Println(err.Error())
+	}
+	imageTrueCnv := &multipart.FileHeader{
+		Filename: imageTrue.Name(),
+	}
+
+	resData := homestay.Core{
+		ID:       1,
+		Name:     "villa 1",
+		Address:  "Jogja",
+		Phone:    "081234567",
+		Price:    500000,
+		Image:    imageTrueCnv.Filename,
+		Facility: "5 Kamar Tidur, 2 Kamar Mandi dalam, AC, Private Pool, dan Rooftop",
+	}
+
+	t.Run("success get homestay detail", func(t *testing.T) {
+		repo.On("ShowDetail", uint(1)).Return(resData, nil).Once()
+		srv := New(repo)
+		res, err := srv.ShowDetail(uint(1))
+		assert.Nil(t, err)
+		assert.Equal(t, resData.ID, res.ID)
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("data not found", func(t *testing.T) {
+		repo.On("ShowDetail", uint(1)).Return(homestay.Core{}, errors.New("data not found")).Once()
+		srv := New(repo)
+		res, err := srv.ShowDetail(uint(1))
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "not found")
+		assert.NotEqual(t, 0, res.ID)
+		repo.AssertExpectations(t)
+	})
+	t.Run("server problem", func(t *testing.T) {
+		repo.On("ShowDetail", uint(1)).Return(homestay.Core{}, errors.New("server problem")).Once()
+		srv := New(repo)
+		res, err := srv.ShowDetail(uint(1))
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "server")
+		assert.NotEqual(t, 0, res.ID)
+		repo.AssertExpectations(t)
+	})
+}

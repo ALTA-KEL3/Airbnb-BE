@@ -123,7 +123,7 @@ func (hh *homestayHandler) ShowAll() echo.HandlerFunc {
 			if err != nil {
 				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "internal server error"})
 			}
-			val.Feedback.Rating = uint(rating)
+			val.Feedback.Rating = int(rating)
 			result = append(result, ShowAllHomestayJson(val))
 		}
 
@@ -152,7 +152,7 @@ func (hh *homestayHandler) ShowDetail() echo.HandlerFunc {
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "internal server error"})
 		}
-		homestay.Feedback.Rating = uint(rating)
+		homestay.Feedback.Rating = int(rating)
 
 		if err != nil {
 			if strings.Contains(err.Error(), "data") {
@@ -241,7 +241,7 @@ func (hh *homestayHandler) MyHomestay() echo.HandlerFunc {
 			if err != nil {
 				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "internal server error"})
 			}
-			val.Feedback.Rating = uint(rating)
+			val.Feedback.Rating = int(rating)
 			result = append(result, HomestayResponse(val))
 		}
 		return c.JSON(http.StatusOK, map[string]interface{}{

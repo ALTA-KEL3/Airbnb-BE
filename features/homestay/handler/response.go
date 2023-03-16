@@ -13,7 +13,7 @@ type Homestay struct {
 	Price    float64 `json:"price"`
 	Facility string  `json:"facility"`
 	Image    string  `json:"image"`
-	Rating   uint    `json:"rating"`
+	Rating   int    `json:"rating"`
 }
 
 func HomestayResponse(data homestay.Core) Homestay {
@@ -35,7 +35,7 @@ type ShowAllHomestay struct {
 	Name     string  `json:"name"`
 	Facility string  `json:"facility"`
 	Price    float64 `json:"price"`
-	Rating   uint    `json:"rating"`
+	Rating   int    `json:"rating"`
 }
 
 func ShowAllHomestayJson(data homestay.Core) ShowAllHomestay {

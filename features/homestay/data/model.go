@@ -16,18 +16,9 @@ type Homestay struct {
 	Facility string
 	Image    string
 	UserID   uint
-	// Role     string
 	User user.User
 }
 
-// type UserCore struct {
-// 	gorm.Model
-// 	Name           string
-// 	Address        string
-// 	Phone          string
-// 	Role           string
-// 	ProfilePicture string
-// }
 
 func ModelToCore(data Homestay) homestay.Core {
 	return homestay.Core{
@@ -38,7 +29,6 @@ func ModelToCore(data Homestay) homestay.Core {
 		Price:    data.Price,
 		Facility: data.Facility,
 		Image:    data.Image,
-		// Role:     data.Role,
 		UserID: data.UserID,
 	}
 }
@@ -53,6 +43,5 @@ func CoreToModel(data homestay.Core) Homestay {
 		Facility: data.Facility,
 		Image:    data.Image,
 		UserID:   data.UserID,
-		// Role:     data.Role,
 	}
 }

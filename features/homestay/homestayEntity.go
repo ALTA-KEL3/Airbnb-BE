@@ -14,7 +14,6 @@ type Core struct {
 	Price    float64 `json:"price"`
 	Facility string  `json:"facility"`
 	Image   string  `json:"image"`
-	Role     string  `json:"role"`
 	UserID   uint    `json:"user_id"`
 }
 

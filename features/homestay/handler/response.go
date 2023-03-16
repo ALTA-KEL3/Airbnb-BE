@@ -12,9 +12,7 @@ type Homestay struct {
 	Phone    string  `json:"phone"`
 	Price    float64 `json:"price"`
 	Facility string  `json:"facility"`
-	Image1   string  `json:"image1"`
-	Image2   string  `json:"image2"`
-	Image3   string  `json:"image3"`
+	Image   string  `json:"image"`
 }
 
 func HomestayResponse(data homestay.Core) Homestay {
@@ -25,15 +23,13 @@ func HomestayResponse(data homestay.Core) Homestay {
 		Phone:    data.Phone,
 		Price:    data.Price,
 		Facility: data.Facility,
-		Image1:   data.Image1,
-		Image2:   data.Image2,
-		Image3:   data.Image3,
+		Image:   data.Image,
 	}
 }
 
 type ShowAllHomestay struct {
 	ID       uint    `json:"id"`
-	Image1   string  `json:"image1"`
+	Image   string  `json:"image"`
 	Name     string  `json:"name"`
 	Facility string  `json:"facility"`
 	Price    float64 `json:"price"`
@@ -42,7 +38,7 @@ type ShowAllHomestay struct {
 func ShowAllHomestayJson(data homestay.Core) ShowAllHomestay {
 	return ShowAllHomestay{
 		ID:       data.ID,
-		Image1:   data.Image1,
+		Image:   data.Image,
 		Name:     data.Name,
 		Facility: data.Facility,
 		Price:    data.Price,
@@ -71,14 +67,8 @@ func ConvertHomestayUpdateResponse(input homestay.Core) (interface{}, error) {
 	if ResponseFilter.Facility != "" {
 		result["facility"] = ResponseFilter.Facility
 	}
-	if ResponseFilter.Image1 != "" {
-		result["image1"] = ResponseFilter.Image1
-	}
-	if ResponseFilter.Image2 != "" {
-		result["image2"] = ResponseFilter.Image2
-	}
-	if ResponseFilter.Image3 != "" {
-		result["image3"] = ResponseFilter.Image3
+	if ResponseFilter.Image != "" {
+		result["image"] = ResponseFilter.Image
 	}
 
 	if len(result) <= 1 {

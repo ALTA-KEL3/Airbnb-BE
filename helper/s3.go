@@ -42,7 +42,7 @@ type UploadResult struct {
 // ======================================================================
 // UPLOAD IMAGE PROGRESS
 // ======================================================================
-func GetUrlImagesFromAWS1(fileData multipart.FileHeader) (string, error) {
+func GetUrlImagesFromAWS(fileData multipart.FileHeader) (string, error) {
 
 	if fileData.Filename != "" && fileData.Size != 0 {
 		if fileData.Size > 500000 {
@@ -60,7 +60,7 @@ func GetUrlImagesFromAWS1(fileData multipart.FileHeader) (string, error) {
 		defer file.Close()
 
 		log.Println("size:", fileData.Filename, file)
-		namaFile := GenerateRandomString1()
+		namaFile := GenerateRandomString()
 		namaFile = namaFile + tipeNameFile
 		fileData.Filename = namaFile
 		log.Println(namaFile)
@@ -75,71 +75,6 @@ func GetUrlImagesFromAWS1(fileData multipart.FileHeader) (string, error) {
 	return "", nil
 }
 
-func GetUrlImagesFromAWS2(fileData multipart.FileHeader) (string, error) {
-
-	if fileData.Filename != "" && fileData.Size != 0 {
-		if fileData.Size > 500000 {
-			return "", errors.New("file size max 500kb")
-		}
-		file, err := fileData.Open()
-		if err != nil {
-			return "", errors.New("error open fileData")
-		}
-		// Validasi Type
-		tipeNameFile, err := TypeFile(file)
-		if err != nil {
-			return "", errors.New("file type error only jpg or png file can be upload")
-		}
-		defer file.Close()
-
-		log.Println("size:", fileData.Filename, file)
-		namaFile := GenerateRandomString2()
-		namaFile = namaFile + tipeNameFile
-		fileData.Filename = namaFile
-		log.Println(namaFile)
-		file2, _ := fileData.Open()
-		defer file2.Close()
-		uploadURL, err := UploadToS3(fileData.Filename, file2)
-		if err != nil {
-			return "", errors.New("cannot upload to s3 server error")
-		}
-		return uploadURL, nil
-	}
-	return "", nil
-}
-
-func GetUrlImagesFromAWS3(fileData multipart.FileHeader) (string, error) {
-
-	if fileData.Filename != "" && fileData.Size != 0 {
-		if fileData.Size > 500000 {
-			return "", errors.New("file size max 500kb")
-		}
-		file, err := fileData.Open()
-		if err != nil {
-			return "", errors.New("error open fileData")
-		}
-		// Validasi Type
-		tipeNameFile, err := TypeFile(file)
-		if err != nil {
-			return "", errors.New("file type error only jpg or png file can be upload")
-		}
-		defer file.Close()
-
-		log.Println("size:", fileData.Filename, file)
-		namaFile := GenerateRandomString3()
-		namaFile = namaFile + tipeNameFile
-		fileData.Filename = namaFile
-		log.Println(namaFile)
-		file2, _ := fileData.Open()
-		defer file2.Close()
-		uploadURL, err := UploadToS3(fileData.Filename, file2)
-		if err != nil {
-			return "", errors.New("cannot upload to s3 server error")
-		}
-		return uploadURL, nil
-	}
-	return "", nil
-}
 
 // ======================================================================
 // UPLOAD TO S3
@@ -164,7 +99,7 @@ func UploadToS3(fileName string, src multipart.File) (string, error) {
 	return result.Location, nil
 }
 
-func GenerateRandomString1() string {
+func GenerateRandomString() string {
 	rand.Seed(time.Now().Unix())
 	str := "AsDfzGhBvCX123456MnBp"
 	shuff := []rune(str)
@@ -178,30 +113,3 @@ func GenerateRandomString1() string {
 	return string(shuff)
 }
 
-func GenerateRandomString2() string {
-	rand.Seed(time.Now().Unix())
-	str := "NSM<ANKJHkasjadhs"
-	shuff := []rune(str)
-	// Shuffling the string
-	rand.Shuffle(len(shuff), func(i, j int) {
-		shuff[i], shuff[j] = shuff[j], shuff[i]
-	})
-
-	// Displaying the random string
-	// fmt.Println(string(shuff))
-	return string(shuff)
-}
-
-func GenerateRandomString3() string {
-	rand.Seed(time.Now().Unix())
-	str := "ADJiuiwjrksnfdjshfiu"
-	shuff := []rune(str)
-	// Shuffling the string
-	rand.Shuffle(len(shuff), func(i, j int) {
-		shuff[i], shuff[j] = shuff[j], shuff[i]
-	})
-
-	// Displaying the random string
-	// fmt.Println(string(shuff))
-	return string(shuff)
-}

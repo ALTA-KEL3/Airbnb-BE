@@ -22,28 +22,18 @@ func New(data homestay.HomestayData) homestay.HomestayService {
 	}
 }
 
-func (hs *homestayService) Add(token interface{}, fileData1 multipart.FileHeader, fileData2 multipart.FileHeader, fileData3 multipart.FileHeader, newHomestay homestay.Core) (homestay.Core, error) {
+func (hs *homestayService) Add(token interface{}, fileData multipart.FileHeader, newHomestay homestay.Core) (homestay.Core, error) {
 	userID := helper.ExtractToken(token)
 
 	if userID <= 0 {
 		return homestay.Core{}, errors.New("user not found")
 	}
 
-	url1, err := helper.GetUrlImagesFromAWS1(fileData1)
+	url, err := helper.GetUrlImagesFromAWS(fileData)
 	if err != nil {
 		return homestay.Core{}, errors.New("validate: " + err.Error())
 	}
-	url2, err := helper.GetUrlImagesFromAWS2(fileData2)
-	if err != nil {
-		return homestay.Core{}, errors.New("validate: " + err.Error())
-	}
-	url3, err := helper.GetUrlImagesFromAWS3(fileData3)
-	if err != nil {
-		return homestay.Core{}, errors.New("validate: " + err.Error())
-	}
-	newHomestay.Image1 = url1
-	newHomestay.Image2 = url2
-	newHomestay.Image3 = url3
+	newHomestay.Image = url
 
 	res, err := hs.Data.Add(uint(userID), newHomestay)
 
@@ -82,28 +72,18 @@ func (hs *homestayService) ShowDetail(homestayID uint) (homestay.Core, error) {
 	return res, nil
 }
 
-func (hs *homestayService) Update(token interface{}, homestayID uint, fileData1 multipart.FileHeader, fileData2 multipart.FileHeader, fileData3 multipart.FileHeader, updatedHomestay homestay.Core) (homestay.Core, error) {
+func (hs *homestayService) Update(token interface{}, homestayID uint, fileData multipart.FileHeader, updatedHomestay homestay.Core) (homestay.Core, error) {
 	userID := helper.ExtractToken(token)
 
 	if userID <= 0 {
 		return homestay.Core{}, errors.New("user not found")
 	}
 
-	url1, err := helper.GetUrlImagesFromAWS1(fileData1)
+	url, err := helper.GetUrlImagesFromAWS(fileData)
 	if err != nil {
 		return homestay.Core{}, errors.New("validate: " + err.Error())
 	}
-	url2, err := helper.GetUrlImagesFromAWS2(fileData2)
-	if err != nil {
-		return homestay.Core{}, errors.New("validate: " + err.Error())
-	}
-	url3, err := helper.GetUrlImagesFromAWS3(fileData3)
-	if err != nil {
-		return homestay.Core{}, errors.New("validate: " + err.Error())
-	}
-	updatedHomestay.Image1 = url1
-	updatedHomestay.Image2 = url2
-	updatedHomestay.Image3 = url3
+	updatedHomestay.Image = url
 
 	res, err := hs.Data.Update(uint(userID), homestayID, updatedHomestay)
 

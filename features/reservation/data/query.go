@@ -1,8 +1,6 @@
 package data
 
 import (
-	// "errors"
-
 	"airbnb/features/reservation"
 
 	"gorm.io/gorm"
@@ -18,11 +16,8 @@ func New(db *gorm.DB) reservation.ReservationDataInterface {
 	}
 }
 
-// func (r *reservationRepository) CheckAvailability(input reservation.ReservationCore) (data reservation.Homestay, err error) {
-func (r *reservationRepository) CheckAvailability(input reservation.ReservationCore) (data reservation.Homestay, err error) {
+func (r *reservationRepository) CheckAvailability(input reservation.ReservationCore) (data reservation.ReservationCore , err error) {
 
-	// var reservation Reservation
-	var homestay Homestay
 	var reservation Reservation
 
 	tx := r.db.Where("homestay_id=? AND ? BETWEEN booked_start AND booked_end OR ? BETWEEN booked_start AND booked_end", input.HomestayID, input.Checkin, input.Checkout).First(&reservation, input.HomestayID) //
@@ -30,7 +25,7 @@ func (r *reservationRepository) CheckAvailability(input reservation.ReservationC
 	if tx.Error != nil {
 		return data, tx.Error
 	}
-	data = homestay.toCore()
+	data = reservation.toCore()
 	return data, nil
 }
 

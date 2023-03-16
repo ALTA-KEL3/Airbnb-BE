@@ -28,13 +28,15 @@ func InitRouter(db *gorm.DB, e *echo.Echo) {
 	userService := userServ.New(userData)
 	userHandler := userHdl.New(userService)
 
-	homestayData := homestayData.New(db)
-	homestayService := homestaySrv.New(homestayData)
-	homestayHandler := homestayHdl.New(homestayService, userService)
+	
 
 	feedbackData := feedbackData.New(db)
 	feedbackService := feedbackSrv.New(feedbackData)
 	feedbackHandler := feedbackHdl.New(feedbackService)
+
+	homestayData := homestayData.New(db)
+	homestayService := homestaySrv.New(homestayData)
+	homestayHandler := homestayHdl.New(homestayService, userService, feedbackService)
 
 	reservationData := reservationData.New(db)
 	reservationService := reservationSrv.New(reservationData)

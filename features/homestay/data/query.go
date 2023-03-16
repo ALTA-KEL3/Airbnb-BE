@@ -65,7 +65,7 @@ func (hq *homestayQuery) Delete(userID uint, homestayID uint) error {
 // ShowAll implements homestay.HomestayData
 func (hq *homestayQuery) ShowAll() ([]homestay.Core, error) {
 	res := []Homestay{}
-	err := hq.db.Find(&res).Error
+	err := hq.db.Preload("Feedback").Find(&res).Error
 	if err != nil {
 		log.Println("data not found", err.Error())
 		return []homestay.Core{}, errors.New("data not found")
@@ -82,7 +82,7 @@ func (hq *homestayQuery) ShowAll() ([]homestay.Core, error) {
 func (hq *homestayQuery) ShowDetail(homestayID uint) (homestay.Core, error) {
 	res := Homestay{}
 
-	err := hq.db.Where("id = ?", homestayID).First(&res).Error
+	err := hq.db.Where("id = ?", homestayID).Preload("Feedback").First(&res).Error
 	if err != nil {
 		log.Println("data not found", err.Error())
 		return homestay.Core{}, errors.New("data not found")
@@ -114,7 +114,7 @@ func (hq *homestayQuery) Update(userID uint, homestayID uint, updateHomestay hom
 
 func (hq *homestayQuery) MyHomestay(userID uint) ([]homestay.Core, error) {
 	res := []Homestay{}
-	if err := hq.db.Where("user_id = ?", userID).Order("created_at desc").Find(&res).Error; err != nil {
+	if err := hq.db.Preload("Feedback").Order("created_at desc").Find(&res).Error; err != nil {
 		log.Println("get homestay data query error : ", err.Error())
 		return []homestay.Core{}, err
 	}

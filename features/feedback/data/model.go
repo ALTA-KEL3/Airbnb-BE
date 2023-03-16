@@ -19,6 +19,7 @@ type Feedback struct {
 	// Homestay   homestay.Homestay
 	// Homestay Homestay
 	ReservationID uint
+	HomestayRefer uint
 }
 
 type User struct {

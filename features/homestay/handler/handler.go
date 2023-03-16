@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"airbnb/features/feedback"
 	"airbnb/features/homestay"
 	"airbnb/features/user"
 	"airbnb/helper"
@@ -15,12 +16,14 @@ import (
 type homestayHandler struct {
 	srv    homestay.HomestayService
 	usrSrv user.UserService
+	fdbSrv feedback.FeedbackServiceInterface
 }
 
-func New(srv homestay.HomestayService, usrSrvc user.UserService) homestay.HomestayHandler {
+func New(srv homestay.HomestayService, usrSrvc user.UserService, fdbSrvc feedback.FeedbackServiceInterface) homestay.HomestayHandler {
 	return &homestayHandler{
 		srv:    srv,
 		usrSrv: usrSrvc,
+		fdbSrv: fdbSrvc,
 	}
 }
 
@@ -37,7 +40,7 @@ func (hh *homestayHandler) Add() echo.HandlerFunc {
 		}
 		if user.Role != "hoster" {
 			log.Println("access denied, cannot add product because you are not hoster")
-			return c.JSON(http.StatusUnauthorized, map[string]interface{}{"message": "access denied"})
+			return c.JSON(http.StatusUnauthorized, map[string]interface{}{"message": "access deniedcannot add product because you are not hoster"})
 		}
 
 		err := c.Bind(&input)
@@ -109,14 +112,21 @@ func (hh *homestayHandler) Delete() echo.HandlerFunc {
 // ShowAll implements homestay.HomestayHandler
 func (hh *homestayHandler) ShowAll() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		res, err := hh.srv.ShowAll()
+		token := c.Get("user")
+		rhomestay, err := hh.srv.ShowAll()
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "internal server error"})
 		}
 		result := []ShowAllHomestay{}
-		for _, val := range res {
+		for _, val := range rhomestay {
+			rating, err := hh.getRating(token, val.ID)
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "internal server error"})
+			}
+			val.Feedback.Rating = uint(rating)
 			result = append(result, ShowAllHomestayJson(val))
 		}
+
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"data":    result,
 			"message": "success show all homestay",
@@ -128,6 +138,7 @@ func (hh *homestayHandler) ShowAll() echo.HandlerFunc {
 func (hh *homestayHandler) ShowDetail() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		paramID := c.Param("homestay_id")
+		token := c.Get("user")
 
 		homestayID, err := strconv.Atoi(paramID)
 		if err != nil {
@@ -135,7 +146,13 @@ func (hh *homestayHandler) ShowDetail() echo.HandlerFunc {
 			return c.JSON(http.StatusBadGateway, "invalid input")
 		}
 
-		res, err := hh.srv.ShowDetail(uint(homestayID))
+		homestay, _ := hh.srv.ShowDetail(uint(homestayID))
+
+		rating, err := hh.getRating(token, uint(homestayID))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "internal server error"})
+		}
+		homestay.Feedback.Rating = uint(rating)
 
 		if err != nil {
 			if strings.Contains(err.Error(), "data") {
@@ -144,7 +161,7 @@ func (hh *homestayHandler) ShowDetail() echo.HandlerFunc {
 				})
 			}
 		}
-		return c.JSON(helper.PrintSuccessReponse(http.StatusOK, "success get homestay details", HomestayResponse(res)))
+		return c.JSON(helper.PrintSuccessReponse(http.StatusOK, "success get homestay details", HomestayResponse(homestay)))
 	}
 }
 
@@ -218,7 +235,13 @@ func (hh *homestayHandler) MyHomestay() echo.HandlerFunc {
 			return c.JSON(helper.PrintErrorResponse(err.Error()))
 		}
 		result := []Homestay{}
+
 		for _, val := range res {
+			rating, err := hh.getRating(token, val.ID)
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "internal server error"})
+			}
+			val.Feedback.Rating = uint(rating)
 			result = append(result, HomestayResponse(val))
 		}
 		return c.JSON(http.StatusOK, map[string]interface{}{
@@ -226,4 +249,16 @@ func (hh *homestayHandler) MyHomestay() echo.HandlerFunc {
 			"message": "success get all user homestays",
 		})
 	}
+}
+
+func (hh *homestayHandler) getRating(token interface{}, homestayID uint) (uint, error) {
+	sum := 0
+	rFeedback, err := hh.fdbSrv.ListFeedback(token, homestayID)
+	if err != nil {
+		return 0, err
+	}
+	for _, feedback := range rFeedback {
+		sum += int(feedback.Rating)
+	}
+	return uint(sum) / uint(len(rFeedback)), nil
 }

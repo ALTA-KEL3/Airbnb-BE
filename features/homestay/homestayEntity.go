@@ -13,8 +13,14 @@ type Core struct {
 	Phone    string  `json:"phone"`
 	Price    float64 `json:"price"`
 	Facility string  `json:"facility"`
-	Image   string  `json:"image"`
+	Image    string  `json:"image"`
 	UserID   uint    `json:"user_id"`
+	Feedback Feedback
+}
+
+type Feedback struct {
+	ID     uint
+	Rating uint
 }
 
 type HomestayHandler interface {

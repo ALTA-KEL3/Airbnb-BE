@@ -12,7 +12,8 @@ type Homestay struct {
 	Phone    string  `json:"phone"`
 	Price    float64 `json:"price"`
 	Facility string  `json:"facility"`
-	Image   string  `json:"image"`
+	Image    string  `json:"image"`
+	Rating   uint    `json:"rating"`
 }
 
 func HomestayResponse(data homestay.Core) Homestay {
@@ -23,25 +24,28 @@ func HomestayResponse(data homestay.Core) Homestay {
 		Phone:    data.Phone,
 		Price:    data.Price,
 		Facility: data.Facility,
-		Image:   data.Image,
+		Image:    data.Image,
+		Rating:   data.Feedback.Rating,
 	}
 }
 
 type ShowAllHomestay struct {
 	ID       uint    `json:"id"`
-	Image   string  `json:"image"`
+	Image    string  `json:"image"`
 	Name     string  `json:"name"`
 	Facility string  `json:"facility"`
 	Price    float64 `json:"price"`
+	Rating   uint    `json:"rating"`
 }
 
 func ShowAllHomestayJson(data homestay.Core) ShowAllHomestay {
 	return ShowAllHomestay{
 		ID:       data.ID,
-		Image:   data.Image,
+		Image:    data.Image,
 		Name:     data.Name,
 		Facility: data.Facility,
 		Price:    data.Price,
+		Rating:   data.Feedback.Rating,
 	}
 }
 

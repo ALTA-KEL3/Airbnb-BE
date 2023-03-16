@@ -46,7 +46,7 @@ func (cc *feedbackHandler) ListFeedback() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		token := c.Get("user")
 
-		paramID := c.Param("id")
+		paramID := c.Param("homestay_id")
 
 		homestayID, _ := strconv.Atoi(paramID)
 

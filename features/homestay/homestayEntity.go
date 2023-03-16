@@ -20,7 +20,7 @@ type Core struct {
 
 type Feedback struct {
 	ID     uint
-	Rating uint
+	Rating int
 }
 
 type HomestayHandler interface {

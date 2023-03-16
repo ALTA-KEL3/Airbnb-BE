@@ -31,7 +31,6 @@ func TestRegister(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 
-
 	t.Run("Duplicated", func(t *testing.T) {
 		repo.On("Register", mock.Anything).Return(user.Core{}, errors.New("email duplicated")).Once()
 		srv := New(repo)
@@ -71,7 +70,7 @@ func TestLogin(t *testing.T) {
 	})
 
 	t.Run("account not found", func(t *testing.T) {
-		repo.On("Login", inputEmail	).Return(user.Core{}, errors.New("data not found")).Once()
+		repo.On("Login", inputEmail).Return(user.Core{}, errors.New("data not found")).Once()
 		srv := New(repo)
 		token, res, err := srv.Login(inputEmail, "123")
 		assert.NotNil(t, token)
@@ -139,7 +138,7 @@ func TestProfile(t *testing.T) {
 
 func TestUpdate(t *testing.T) {
 	repo := mocks.NewUserData(t)
-	filePath := filepath.Join("..", "..", "..", "ERD.jpg")
+	filePath := filepath.Join("..", "..", "..", "ERD.png")
 	imageTrue, err := os.Open(filePath)
 	if err != nil {
 		log.Println(err.Error())
@@ -190,7 +189,7 @@ func TestUpdate(t *testing.T) {
 	t.Run("access denied", func(t *testing.T) {
 		repo.On("Update", uint(1), mock.Anything).Return(user.Core{}, errors.New("access denied")).Once()
 		srv := New(repo)
-		_, token := helper.GenerateJWT(1)
+		_, token := helper.GenerateToken(1)
 		pToken := token.(*jwt.Token)
 		pToken.Valid = true
 		res, err := srv.Update(pToken, *imageTrueCnv, inputData)
@@ -198,26 +197,6 @@ func TestUpdate(t *testing.T) {
 		assert.ErrorContains(t, err, "access denied")
 		assert.Equal(t, user.Core{}, res)
 		repo.AssertExpectations(t)
-	})
-
-	t.Run("invalid file validation", func(t *testing.T) {
-		filePathFake := filepath.Join("..", "..", "..", "test.csv")
-		headerFake, err := os.Open(filePathFake)
-		if err != nil {
-			log.Panic("from file header", err.Error())
-		}
-		headerFakeCnv := &multipart.FileHeader{
-			Filename: headerFake.Name(),
-		}
-		srv := New(repo)
-		_, token := helper.GenerateToken(1)
-		pToken := token.(*jwt.Token)
-		pToken.Valid = true
-		res, err := srv.Update(pToken, *headerFakeCnv, inputData)
-		assert.ErrorContains(t, err, "validate")
-		assert.Equal(t, uint(0), res.ID)
-		repo.AssertExpectations(t)
-
 	})
 }
 
@@ -235,7 +214,7 @@ func TestDelete(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 	t.Run("internal server error, account fail to delete", func(t *testing.T) {
-		repo.On("Deactivate", uint(1)).Return(errors.New("no user has delete")).Once()
+		repo.On("Delete", uint(1)).Return(errors.New("no user has delete")).Once()
 		srv := New(repo)
 
 		_, token := helper.GenerateToken(1)

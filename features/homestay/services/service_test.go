@@ -169,3 +169,33 @@ func TestUpdate(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 }
+
+func TestDelete(t *testing.T) {
+	repo := mocks.NewHomestayData(t)
+
+	t.Run("success delete homestay", func(t *testing.T) {
+		repo.On("Delete", uint(1), uint(1)).Return(nil).Once()
+
+		srv := New(repo)
+		_, token := helper.GenerateToken(1)
+		pToken := token.(*jwt.Token)
+		pToken.Valid = true
+		err := srv.Delete(pToken, 1)
+		assert.Nil(t, err)
+		repo.AssertExpectations(t)
+
+	})
+
+	t.Run("data not found", func(t *testing.T) {
+		repo.On("Delete", uint(2), uint(2)).Return(errors.New("data not found")).Once()
+
+		srv := New(repo)
+		_, token := helper.GenerateToken(2)
+		pToken := token.(*jwt.Token)
+		pToken.Valid = true
+		err := srv.Delete(pToken, 2)
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, err, "found")
+		repo.AssertExpectations(t)
+	})
+}

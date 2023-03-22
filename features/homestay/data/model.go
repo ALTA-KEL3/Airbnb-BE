@@ -2,6 +2,8 @@ package data
 
 import (
 	"airbnb/features/homestay"
+	"strings"
+
 	// user "airbnb/features/user/data"
 	// feedback "airbnb/features/feedback/data"
 
@@ -10,13 +12,13 @@ import (
 
 type Homestay struct {
 	gorm.Model
-	Name      string
-	Address   string
-	Phone     string
-	Price     float64
-	Facility  string
-	Image     string
-	UserID    uint
+	Name     string
+	Address  string
+	Phone    string
+	Price    float64
+	Facility string
+	Image    string
+	UserID   uint
 	Feedback []Feedback `gorm:"foreignKey:HomestayRefer"`
 }
 
@@ -34,7 +36,7 @@ func ModelToCore(data Homestay) homestay.Core {
 		Phone:    data.Phone,
 		Price:    data.Price,
 		Facility: data.Facility,
-		Image:    data.Image,
+		Image:    strings.Split(data.Image, " "),
 		UserID:   data.UserID,
 		Feedback: homestay.Feedback{},
 	}
@@ -42,14 +44,14 @@ func ModelToCore(data Homestay) homestay.Core {
 
 func CoreToModel(data homestay.Core) Homestay {
 	return Homestay{
-		Model:     gorm.Model{ID: data.ID},
-		Name:      data.Name,
-		Address:   data.Address,
-		Phone:     data.Phone,
-		Price:     data.Price,
-		Facility:  data.Facility,
-		Image:     data.Image,
-		UserID:    data.UserID,
+		Model:    gorm.Model{ID: data.ID},
+		Name:     data.Name,
+		Address:  data.Address,
+		Phone:    data.Phone,
+		Price:    data.Price,
+		Facility: data.Facility,
+		Image:    strings.Join(data.Image, " "),
+		UserID:   data.UserID,
 		Feedback: []Feedback{},
 	}
 }

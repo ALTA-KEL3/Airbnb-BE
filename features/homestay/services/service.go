@@ -22,18 +22,23 @@ func New(data homestay.HomestayData) homestay.HomestayService {
 	}
 }
 
-func (hs *homestayService) Add(token interface{}, fileData multipart.FileHeader, newHomestay homestay.Core) (homestay.Core, error) {
+func (hs *homestayService) Add(token interface{}, images []*multipart.FileHeader, newHomestay homestay.Core) (homestay.Core, error) {
 	userID := helper.ExtractToken(token)
 
 	if userID <= 0 {
 		return homestay.Core{}, errors.New("user not found")
 	}
 
-	url, err := helper.GetUrlImagesFromAWS(fileData)
-	if err != nil {
-		return homestay.Core{}, errors.New("validate: " + err.Error())
+	var urls []string
+	for i, image := range images {
+		url, err := helper.GetUrlImagesFromAWS(*image, i)
+		if err != nil {
+			return homestay.Core{}, errors.New("validate: " + err.Error())
+		}
+		urls = append(urls, url)
 	}
-	newHomestay.Image = url
+
+	newHomestay.Image = urls
 
 	res, err := hs.Data.Add(uint(userID), newHomestay)
 
@@ -72,18 +77,22 @@ func (hs *homestayService) ShowDetail(homestayID uint) (homestay.Core, error) {
 	return res, nil
 }
 
-func (hs *homestayService) Update(token interface{}, homestayID uint, fileData multipart.FileHeader, updatedHomestay homestay.Core) (homestay.Core, error) {
+func (hs *homestayService) Update(token interface{}, homestayID uint, images []*multipart.FileHeader, updatedHomestay homestay.Core) (homestay.Core, error) {
 	userID := helper.ExtractToken(token)
 
 	if userID <= 0 {
 		return homestay.Core{}, errors.New("user not found")
 	}
 
-	url, err := helper.GetUrlImagesFromAWS(fileData)
-	if err != nil {
-		return homestay.Core{}, errors.New("validate: " + err.Error())
+	var urls []string
+	for i, image := range images {
+		url, err := helper.GetUrlImagesFromAWS(*image, i)
+		if err != nil {
+			return homestay.Core{}, errors.New("validate: " + err.Error())
+		}
+		urls = append(urls, url)
 	}
-	updatedHomestay.Image = url
+	updatedHomestay.Image = urls
 
 	res, err := hs.Data.Update(uint(userID), homestayID, updatedHomestay)
 

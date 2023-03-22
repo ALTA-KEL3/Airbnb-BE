@@ -13,7 +13,7 @@ type Core struct {
 	Phone    string  `json:"phone"`
 	Price    float64 `json:"price"`
 	Facility string  `json:"facility"`
-	Image    string  `json:"image"`
+	Image    []string  `json:"image"`
 	UserID   uint    `json:"user_id"`
 	Feedback Feedback
 }
@@ -33,10 +33,10 @@ type HomestayHandler interface {
 }
 
 type HomestayService interface {
-	Add(token interface{}, fileData multipart.FileHeader, newHomestay Core) (Core, error)
+	Add(token interface{}, images []*multipart.FileHeader, newHomestay Core) (Core, error)
 	ShowAll() ([]Core, error)
 	ShowDetail(homestayID uint) (Core, error)
-	Update(token interface{}, homestayID uint, fileData multipart.FileHeader, updateData Core) (Core, error)
+	Update(token interface{}, homestayID uint, images []*multipart.FileHeader, updateData Core) (Core, error)
 	Delete(token interface{}, homestayID uint) error
 	MyHomestay(token interface{}) ([]Core, error)
 }

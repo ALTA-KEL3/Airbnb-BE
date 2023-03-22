@@ -6,14 +6,14 @@ import (
 )
 
 type Homestay struct {
-	ID       uint    `json:"id"`
-	Name     string  `json:"name"`
-	Address  string  `json:"address"`
-	Phone    string  `json:"phone"`
-	Price    float64 `json:"price"`
-	Facility string  `json:"facility"`
-	Image    string  `json:"image"`
-	Rating   uint    `json:"rating"`
+	ID       uint     `json:"id"`
+	Name     string   `json:"name"`
+	Address  string   `json:"address"`
+	Phone    string   `json:"phone"`
+	Price    float64  `json:"price"`
+	Facility string   `json:"facility"`
+	Image    []string `json:"image"`
+	Rating   uint     `json:"rating"`
 }
 
 func HomestayResponse(data homestay.Core) Homestay {
@@ -30,12 +30,12 @@ func HomestayResponse(data homestay.Core) Homestay {
 }
 
 type ShowAllHomestay struct {
-	ID       uint    `json:"id"`
-	Image    string  `json:"image"`
-	Name     string  `json:"name"`
-	Facility string  `json:"facility"`
-	Price    float64 `json:"price"`
-	Rating   uint    `json:"rating"`
+	ID       uint     `json:"id"`
+	Image    []string `json:"image"`
+	Name     string   `json:"name"`
+	Facility string   `json:"facility"`
+	Price    float64  `json:"price"`
+	Rating   uint     `json:"rating"`
 }
 
 func ShowAllHomestayJson(data homestay.Core) ShowAllHomestay {
@@ -71,11 +71,10 @@ func ConvertHomestayUpdateResponse(input homestay.Core) (interface{}, error) {
 	if ResponseFilter.Facility != "" {
 		result["facility"] = ResponseFilter.Facility
 	}
-	if ResponseFilter.Image != "" {
+	if len(ResponseFilter.Image) != 0 {
 		result["image"] = ResponseFilter.Image
 	}
-
-	if len(result) <= 1 {
+	if len(result) < 1 {
 		return homestay.Core{}, errors.New("no data was change")
 	}
 	return result, nil

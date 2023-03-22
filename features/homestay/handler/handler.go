@@ -6,6 +6,7 @@ import (
 	"airbnb/features/user"
 	"airbnb/helper"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"strconv"
 	"strings"
@@ -48,16 +49,22 @@ func (hh *homestayHandler) Add() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, "input format incorrect")
 		}
 		//proses cek apakah user input foto ?
-		checkFile, _, _ := c.Request().FormFile("image")
-		if checkFile != nil {
-			formHeader, err := c.FormFile("image")
-			if err != nil {
-				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "Select a file to upload"})
-			}
-			input.FileHeader = *formHeader
-		}
+		// checkFile, _, _ := c.Request().FormFile("image")
+		// if checkFile != nil {
+		// 	formHeader, err := c.FormFile("image")
+		// 	if err != nil {
+		// 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "Select a file to upload"})
+		// 	}
+		// 	input.FileHeader = *formHeader
+		// }
 
-		res, err := hh.srv.Add(token, input.FileHeader, *ReqToCore(input))
+		form, err := c.MultipartForm()
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "please select file to upload"})
+		}
+		images := form.File["image"]
+
+		res, err := hh.srv.Add(token, images, *ReqToCore(input))
 
 		if err != nil {
 			if strings.Contains(err.Error(), "type") {
@@ -186,16 +193,16 @@ func (hh *homestayHandler) Update() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, "input format incorrect")
 		}
 		//proses cek apakah user input foto ?
+		var images []*multipart.FileHeader
 		checkFile, _, _ := c.Request().FormFile("image")
 		if checkFile != nil {
-			formHeader, err := c.FormFile("image")
+			form, err := c.MultipartForm()
 			if err != nil {
-				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "Select a file to upload"})
+				return c.JSON(http.StatusInternalServerError, map[string]interface{}{"message": "please select file to upload"})
 			}
-			input.FileHeader = *formHeader
+			images = form.File["image"]
 		}
-
-		res, err := hh.srv.Update(token, uint(homestayID), input.FileHeader, *ReqToCore(input))
+		res, err := hh.srv.Update(token, uint(homestayID), images, *ReqToCore(input))
 
 		if err != nil {
 			if strings.Contains(err.Error(), "type") {

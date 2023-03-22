@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"math/rand"
 	"mime/multipart"
+	"strconv"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -42,7 +42,7 @@ type UploadResult struct {
 // ======================================================================
 // UPLOAD IMAGE PROGRESS
 // ======================================================================
-func GetUrlImagesFromAWS(fileData multipart.FileHeader) (string, error) {
+func GetUrlImagesFromAWS(fileData multipart.FileHeader, index int) (string, error) {
 
 	if fileData.Filename != "" && fileData.Size != 0 {
 		if fileData.Size > 500000 {
@@ -60,8 +60,9 @@ func GetUrlImagesFromAWS(fileData multipart.FileHeader) (string, error) {
 		defer file.Close()
 
 		log.Println("size:", fileData.Filename, file)
-		namaFile := GenerateRandomString()
-		namaFile = namaFile + tipeNameFile
+		// namaFile := GenerateRandomString()
+		namaFile := strconv.FormatInt(time.Now().Unix(), 10) + strconv.Itoa(index) + tipeNameFile
+		// namaFile = namaFile + tipeNameFile
 		fileData.Filename = namaFile
 		log.Println(namaFile)
 		file2, _ := fileData.Open()
@@ -74,7 +75,6 @@ func GetUrlImagesFromAWS(fileData multipart.FileHeader) (string, error) {
 	}
 	return "", nil
 }
-
 
 // ======================================================================
 // UPLOAD TO S3
@@ -99,17 +99,16 @@ func UploadToS3(fileName string, src multipart.File) (string, error) {
 	return result.Location, nil
 }
 
-func GenerateRandomString() string {
-	rand.Seed(time.Now().Unix())
-	str := "AsDfzGhBvCX123456MnBp"
-	shuff := []rune(str)
-	// Shuffling the string
-	rand.Shuffle(len(shuff), func(i, j int) {
-		shuff[i], shuff[j] = shuff[j], shuff[i]
-	})
+// func GenerateRandomString() string {
+// 	rand.Seed(time.Now().Unix())
+// 	str := "AsDfzGhBvCX123456MnBp"
+// 	shuff := []rune(str)
+// 	// Shuffling the string
+// 	rand.Shuffle(len(shuff), func(i, j int) {
+// 		shuff[i], shuff[j] = shuff[j], shuff[i]
+// 	})
 
-	// Displaying the random string
-	// fmt.Println(string(shuff))
-	return string(shuff)
-}
-
+// 	// Displaying the random string
+// 	// fmt.Println(string(shuff))
+// 	return string(shuff)
+// }
